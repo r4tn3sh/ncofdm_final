@@ -40,7 +40,7 @@ list(APPEND headers
     usrp.h
     viterbi.h
 
-    #transmitter.h
+    transmitter.h
     #receiver.h
 )
 
@@ -65,7 +65,7 @@ list(APPEND sources
     usrp.cpp
     viterbi.cpp
 
-    #transmitter.cpp
+    transmitter.cpp
     #receiver.cpp
 
 )
