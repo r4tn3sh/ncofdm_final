@@ -77,6 +77,8 @@ namespace wno
             case 4:
                 m_active_map = m_active_map_4;
                 break;
+            default:
+                m_active_map = m_active_map_default;
         }
     }
     /*!

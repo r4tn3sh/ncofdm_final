@@ -47,7 +47,8 @@ namespace wno
         std::vector<std::complex<double> > samples = symbol_builder_frame.encode();
 
         // Map the subcarriers and insert pilots
-        symbol_mapper mapper = symbol_mapper();
+        unsigned int sc_choice = 0;
+        symbol_mapper mapper = symbol_mapper(sc_choice);
         std::vector<std::complex<double> > mapped = mapper.map(samples);
 
         // Perform the IFFT
