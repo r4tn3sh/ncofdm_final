@@ -15,28 +15,28 @@
 list(APPEND headers
 
     block.h
-    #circular_accumulator.h
-    #preamble.h
+    circular_accumulator.h
+    preamble.h
     qam.h
     rates.h
     tagged_vector.h
 
-    #channel_est.h
+    channel_est.h
     fft.h
-    #fft_symbols.h
+    fft_symbols.h
     frame_builder.h
-    #frame_decoder.h
-    #frame_detector.h
+    frame_decoder.h
+    frame_detector.h
     interleaver.h
     modulator.h
     parity.h
-    #phase_tracker.h
-    #ppdu.h
+    phase_tracker.h
+    ppdu.h
     symbol_builder.h
     puncturer.h
-    #receiver_chain.h
+    receiver_chain.h
     symbol_mapper.h
-    #timing_sync.h
+    timing_sync.h
     usrp.h
     viterbi.h
 
@@ -47,22 +47,22 @@ list(APPEND headers
 
 list(APPEND sources 
 
-    #channel_est.cpp
+    channel_est.cpp
     fft.cpp
-    #fft_symbols.cpp
+    fft_symbols.cpp
     frame_builder.cpp
-    #frame_decoder.cpp
-    #frame_detector.cpp
+    frame_decoder.cpp
+    frame_detector.cpp
     interleaver.cpp
     modulator.cpp
     parity.cpp
-    #phase_tracker.cpp
-    #ppdu.cpp
+    phase_tracker.cpp
+    ppdu.cpp
     symbol_builder.cpp
     puncturer.cpp
-    #receiver_chain.cpp
+    receiver_chain.cpp
     symbol_mapper.cpp
-    #timing_sync.cpp
+    timing_sync.cpp
     usrp.cpp
     viterbi.cpp
 
