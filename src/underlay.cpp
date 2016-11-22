@@ -21,4 +21,10 @@ namespace wno
         }
         return output;
     }
+    
+    std::vector<std::complex<double> > underlay::decode_underlay(std::vector<std::complex<double> > rx_overlay_data)
+    {
+        std::vector<std::complex<double> > output = rx_overlay_data;
+        return output;
+    }
 }

@@ -157,5 +157,6 @@ namespace wno
         public:
             underlay();
             std::vector<std::complex<double> > add_underlay(std::vector<std::complex<double> > overlay_data);
+            std::vector<std::complex<double> > decode_underlay(std::vector<std::complex<double> > overlay_data);
     };
 }
