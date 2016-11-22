@@ -21,66 +21,13 @@ namespace wno
      *  + 1 -> data
      *  + 2 -> pilot
      */
-    const std::vector<unsigned char> symbol_mapper::m_active_map_default =
+    const std::vector<unsigned char> symbol_mapper::m_active_map =
     {
         0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
         1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
     };
 
-    const std::vector<unsigned char> symbol_mapper::m_active_map_1 =
-    {
-        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-        1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
-    };
-
-    const std::vector<unsigned char> symbol_mapper::m_active_map_2 =
-    {
-        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-        1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
-    };
-
-    const std::vector<unsigned char> symbol_mapper::m_active_map_3 =
-    {
-        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-        1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
-    };
-
-    const std::vector<unsigned char> symbol_mapper::m_active_map_4 =
-    {
-        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-        1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
-    };
-
-    /*!
-     * Constructor
-     */
-    symbol_mapper::symbol_mapper(unsigned int choice) :
-        m_data_subcarrier_count(48),
-        m_pilot_count(4)
-    {
-        switch(choice)
-        {
-            case 1:
-                m_active_map = m_active_map_1;
-                break;
-            case 2:
-                m_active_map = m_active_map_2;
-                break;
-            case 3:
-                m_active_map = m_active_map_3;
-                break;
-            case 4:
-                m_active_map = m_active_map_4;
-                break;
-            default:
-                m_active_map = m_active_map_default;
-        }
-    }
     /*!
      *  The polarity sequence that is multiplied by the pilot sample for each OFDM symbol beginning
      *  with the signal symbol. For example, the pilots in the signal symbol will all be multipled by

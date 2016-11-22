@@ -25,6 +25,7 @@ list(APPEND headers
     fft.h
     fft_symbols.h
     frame_builder.h
+    symbol_builder.h
     frame_decoder.h
     frame_detector.h
     interleaver.h
@@ -32,7 +33,6 @@ list(APPEND headers
     parity.h
     phase_tracker.h
     ppdu.h
-    symbol_builder.h
     puncturer.h
     receiver_chain.h
     symbol_mapper.h
@@ -41,8 +41,8 @@ list(APPEND headers
     viterbi.h
 
     transmitter.h
-    #receiver.h
-    underlay.h
+    receiver.h
+underlay.h
 )
 
 list(APPEND sources 
@@ -51,6 +51,7 @@ list(APPEND sources
     fft.cpp
     fft_symbols.cpp
     frame_builder.cpp
+    symbol_builder.cpp
     frame_decoder.cpp
     frame_detector.cpp
     interleaver.cpp
@@ -58,7 +59,6 @@ list(APPEND sources
     parity.cpp
     phase_tracker.cpp
     ppdu.cpp
-    symbol_builder.cpp
     puncturer.cpp
     receiver_chain.cpp
     symbol_mapper.cpp
@@ -67,8 +67,8 @@ list(APPEND sources
     viterbi.cpp
 
     transmitter.cpp
-    #receiver.cpp
-    underlay.cpp
+    receiver.cpp
+underlay.cpp
 )
 
 

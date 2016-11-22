@@ -30,7 +30,6 @@ namespace wno
          * \brief Constructor for symbol mapper class.
          */
         symbol_mapper();
-        symbol_mapper(unsigned int choice);
 
         /*!
          * \brief Maps the data, pilots, and nulls to their respective subcarriers
@@ -54,12 +53,7 @@ namespace wno
 
     private:
 
-        std::vector<unsigned char> m_active_map; //!< The current map of data, pilots, and nulls.
-        static const std::vector<unsigned char> m_active_map_default; 
-        static const std::vector<unsigned char> m_active_map_1; 
-        static const std::vector<unsigned char> m_active_map_2; 
-        static const std::vector<unsigned char> m_active_map_3; 
-        static const std::vector<unsigned char> m_active_map_4; 
+        static const std::vector<unsigned char> m_active_map; //!< The current map of data, pilots, and nulls.
 
         static const double POLARITY[127]; //!< The Pilot Polarity Sequence
 

@@ -2,6 +2,7 @@
  *  \brief Header file for transmitter class.
  *
  *  The transmitter class is the public interface for the wno_ofdm transmit chain.
+ *  This is the easiest way to start transmitting 802.11a OFDM frames out of the box.
  */
 
 
