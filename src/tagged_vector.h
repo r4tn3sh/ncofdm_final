@@ -31,6 +31,7 @@ namespace wno
         LTS1,           //!< Estimated beginning of first LTS symbol (32 samples after LTS_START
         LTS2,           //!< Estimated beginning of second LTS symbol (64 samples after LTS1
         START_OF_FRAME, //!< Estimated beginning of frame i.e. Signal symbol (64 samples after LTS2)
+        ULPN,
     };
 
     /*! \brief tagged_vector struct

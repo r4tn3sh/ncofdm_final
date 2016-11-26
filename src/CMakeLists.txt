@@ -42,7 +42,8 @@ list(APPEND headers
 
     transmitter.h
     receiver.h
-underlay.h
+    underlay.h
+    underlay_decode.h
 )
 
 list(APPEND sources 
@@ -68,7 +69,8 @@ list(APPEND sources
 
     transmitter.cpp
     receiver.cpp
-underlay.cpp
+    underlay.cpp
+    underlay_decode.cpp
 )
 
 
