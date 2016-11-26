@@ -18,7 +18,7 @@ namespace wno
     /*!
      * \brief The underlay_decode block.
      */
-    class underlay_decode : public wno::block<std::complex<double>, tagged_sample>
+    class underlay_decode : public wno::block<std::complex<double>, std::complex<double> >
     {
     public:
 

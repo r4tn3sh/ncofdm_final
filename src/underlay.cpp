@@ -14,7 +14,8 @@ namespace wno
         for(int x = 0; x < overlay_data.size(); x++)
         {
             // Add 240 240 80 80 80 ......
-            output[x] += std::complex<double>(0.00316227766,0)*SPNS[z]; // adding signal 15dB below
+            // output[x] += std::complex<double>(0.00316227766,0)*SPNS[z]; // adding signal 15dB below
+            output[x] += std::complex<double>(0.03,0)*SPNS[z]; // adding signal 15dB below
             z++;
             if(z>63)
                 z=0;

@@ -21,6 +21,7 @@
 #include "tagged_vector.h"
 #include "frame_detector.h"
 #include "timing_sync.h"
+#include "underlay_decode.h"
 
 namespace wno
 {
@@ -61,6 +62,7 @@ namespace wno
          * Blocks *
          **********/
 
+        underlay_decode * m_ul_decoder;
         frame_detector * m_frame_detector;     //!< Detects start of frame using STS
         timing_sync    * m_timing_sync;        //!< Aligns frame in time using LTS & some freq correction
         fft_symbols    * m_fft_symbols;        //!< Forward FFT of symbols

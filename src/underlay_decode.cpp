@@ -15,7 +15,7 @@
 
 #include "preamble.h"
 #include "underlay.h"
-#define COEFFTHRESH 0.6
+#define COEFFTHRESH 0.25
 #define CARRYOVER_LENGTH 63
 namespace wno
 {
@@ -23,7 +23,8 @@ namespace wno
      * - Initializations:
      */
     underlay_decode::underlay_decode() :
-        block("underlay_decode")
+        block("underlay_decode"),
+        m_carryover(CARRYOVER_LENGTH, 0)
     {}
 
 
@@ -46,13 +47,14 @@ namespace wno
         // Step through the samples
         for(int x = 0; x < input_buffer.size(); x++)
         {
-            output_buffer[x].tag = NONE;
+            // output_buffer[x].tag = NONE;
             std::vector<std::complex<double> >::const_iterator first = input.begin() + x;
             std::vector<std::complex<double> >::const_iterator last = input.begin() + x + 63;
             std::vector<std::complex<double> > newVec(first, last);
             if (correlate(newVec))
             {
-                output_buffer[x].tag = ULPN;
+                std::cout << "PN seq found at " << x << std::endl;
+                // output_buffer[x].tag = ULPN;
             }
             else
             {
@@ -61,7 +63,8 @@ namespace wno
         }
         memcpy(&output_buffer[0],
                 &input[0],
-                input_buffer.size() * sizeof(tagged_sample));
+                input_buffer.size() * sizeof(std::complex<double>));
+                //input_buffer.size() * sizeof(tagged_sample));
         memcpy(&m_carryover[0],
                 &input[input_buffer.size()],
                 CARRYOVER_LENGTH * sizeof(std::complex<double>));
@@ -101,6 +104,8 @@ namespace wno
         std::complex<double> scaled_temp_mean = N*pn_mean*temp_mean;
         numr = abs(temp_mul-scaled_temp_mean);
         denm = sqrt(sqr_sum-N*pow(abs(temp_mean),2))*sqrt(N);
+        if (denm == 0)
+            return(false);
         corr_coeff = numr/denm;
 
         if(corr_coeff>COEFFTHRESH)

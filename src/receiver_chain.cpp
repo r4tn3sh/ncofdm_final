@@ -28,6 +28,7 @@ namespace wno
      */
     receiver_chain::receiver_chain()
     {
+        m_ul_decoder = new underlay_decode();
         m_frame_detector = new frame_detector();
         m_timing_sync = new timing_sync();
         m_fft_symbols = new fft_symbols();
@@ -42,6 +43,7 @@ namespace wno
         m_done_sems.reserve(100);
 
         // Add the blocks to the receiver chain
+        add_block(m_ul_decoder);
         add_block(m_frame_detector);
         add_block(m_timing_sync);
         add_block(m_fft_symbols);
@@ -106,7 +108,8 @@ namespace wno
     std::vector<std::vector<unsigned char> > receiver_chain::process_samples(std::vector<std::complex<double> > samples)
     {
         // samples -> sync short in
-        m_frame_detector->input_buffer.swap(samples);
+        // m_frame_detector->input_buffer.swap(samples);
+        m_ul_decoder->input_buffer.swap(samples);
 
         // Unlock the threads
         for(int x = 0; x < m_wake_sems.size(); x++) sem_post(&m_wake_sems[x]);
@@ -115,6 +118,7 @@ namespace wno
         for(int x = 0; x < m_done_sems.size(); x++) sem_wait(&m_done_sems[x]);
 
         // Update the buffers
+        m_frame_detector->input_buffer.swap(m_ul_decoder->output_buffer);
         m_timing_sync->input_buffer.swap(m_frame_detector->output_buffer);
         m_fft_symbols->input_buffer.swap(m_timing_sync->output_buffer);
         m_channel_est->input_buffer.swap(m_fft_symbols->output_buffer);
