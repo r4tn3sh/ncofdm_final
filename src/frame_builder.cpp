@@ -94,9 +94,18 @@ namespace wno
         memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
         memcpy(&frame[320], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
 
+        // Make the payload size to a muliple of PN-sequence size. (for convenience)
+        int pad_length = pnSize - frame.size()%pnSize;
+        std::vector<std::complex<double> > paddedframe(frame.size() + pad_length);
+        memcpy(&paddedframe[0], &frame[0], frame.size() * sizeof(std::complex<double>));
+        for(int x=0; x<pad_length; x++)
+        {
+            paddedframe[frame.size()+x] = std::complex<double>(0.0,0.0);
+        }
+
         //XXX:Adding underlay after preamble. still in testing phase
         underlay ul = underlay();
-        std::vector<std::complex<double> > combined = ul.add_underlay(frame);
+        std::vector<std::complex<double> > combined = ul.add_underlay(paddedframe);
         
         // Return the samples
         return combined;

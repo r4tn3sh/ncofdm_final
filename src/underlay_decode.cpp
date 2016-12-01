@@ -61,7 +61,7 @@ namespace wno
             // myfile << std::fixed << std::setprecision(8) << corr_coeff << std::endl;
             if(corr_coeff>COEFFTHRESH)
             {
-                // std::cout <<  x << " " << corr_coeff << std::endl;
+                std::cout <<  x << " " << corr_coeff << std::endl;
             }
             // if (correlate(newVec))
             // {
