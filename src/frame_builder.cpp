@@ -71,25 +71,36 @@ namespace wno
             memcpy(&prefixed[x*80], &mapped[x*64+48], 16*sizeof(std::complex<double>));
             memcpy(&prefixed[x*80+16], &mapped[x*64], 64*sizeof(std::complex<double>));
         }
-        //XXX:Adding underlay. still in testing phase
-        underlay ul = underlay();
-        std::vector<std::complex<double> > combined = ul.add_underlay(prefixed);
-        // std::vector<std::complex<double> > combined = prefixed;
 
-        // Prepend the preamble
-        std::vector<std::complex<double> > frame(combined.size() + 320);
-
-        memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
-        memcpy(&frame[320], &combined[0], combined.size() * sizeof(std::complex<double>));
+        // ---------- Underlay before preamble ----------
+        // //XXX:Adding underlay before preamble. still in testing phase
+        // underlay ul = underlay();
+        // std::vector<std::complex<double> > combined = ul.add_underlay(prefixed);
+        // // std::vector<std::complex<double> > combined = prefixed;
 
         // // Prepend the preamble
-        // std::vector<std::complex<double> > frame(prefixed.size() + 320);
+        // std::vector<std::complex<double> > frame(combined.size() + 320);
 
         // memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
-        // memcpy(&frame[320], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
+        // memcpy(&frame[320], &combined[0], combined.size() * sizeof(std::complex<double>));
 
+        // return frame;
+        // ---------------------------------------------
+        
+        // ---------- Underlay after preamble ----------
+        // Prepend the preamble
+        std::vector<std::complex<double> > frame(prefixed.size() + 320);
+
+        memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
+        memcpy(&frame[320], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
+
+        //XXX:Adding underlay after preamble. still in testing phase
+        underlay ul = underlay();
+        std::vector<std::complex<double> > combined = ul.add_underlay(frame);
+        
         // Return the samples
-        return frame;
+        return combined;
+        // ---------------------------------------------
     }
 }
 

@@ -12,11 +12,13 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 
 #include "preamble.h"
 #include "underlay.h"
-#define COEFFTHRESH 0.25
-#define CARRYOVER_LENGTH 63
+#define COEFFTHRESH 0.13
+#define CARRYOVER_LENGTH pnSize
 namespace wno
 {
     /*!
@@ -32,9 +34,12 @@ namespace wno
      */
     void underlay_decode::work()
     {
+        double corr_coeff = 0.0;
         if(input_buffer.size() == 0) return;
         output_buffer.resize(input_buffer.size());
         std::vector<std::complex<double> > input(input_buffer.size() + CARRYOVER_LENGTH);
+        std::ofstream myfile;
+        // myfile.open("corr.txt",std::fstream::app);
 
         memcpy(&input[0],
                 &m_carryover[0],
@@ -45,22 +50,30 @@ namespace wno
                 input_buffer.size() * sizeof(std::complex<double>));
 
         // Step through the samples
+        // std::cout << "Input buffer size : " << input_buffer.size() << std::endl;
         for(int x = 0; x < input_buffer.size(); x++)
         {
             // output_buffer[x].tag = NONE;
             std::vector<std::complex<double> >::const_iterator first = input.begin() + x;
-            std::vector<std::complex<double> >::const_iterator last = input.begin() + x + 63;
+            std::vector<std::complex<double> >::const_iterator last = input.begin() + x + pnSize-1;
             std::vector<std::complex<double> > newVec(first, last);
-            if (correlate(newVec))
+            corr_coeff = correlate(newVec);
+            // myfile << std::fixed << std::setprecision(8) << corr_coeff << std::endl;
+            if(corr_coeff>COEFFTHRESH)
             {
-                std::cout << "PN seq found at " << x << std::endl;
-                // output_buffer[x].tag = ULPN;
+                // std::cout <<  x << " " << corr_coeff << std::endl;
             }
-            else
-            {
-                //
-            }
+            // if (correlate(newVec))
+            // {
+            //     // std::cout << "PN seq found at " << x << std::endl;
+            //     // output_buffer[x].tag = ULPN;
+            // }
+            // else
+            // {
+            //     //
+            // }
         }
+        // myfile.close();
         memcpy(&output_buffer[0],
                 &input[0],
                 input_buffer.size() * sizeof(std::complex<double>));
@@ -73,7 +86,7 @@ namespace wno
     /*!
      *  correlates with SPNS and returns 'true' when correlation exceeds the threshold
      */
-    bool underlay_decode::correlate(std::vector<std::complex<double> > samples)
+    double underlay_decode::correlate(std::vector<std::complex<double> > samples)
     {
         std::complex<double> temp_mul;
         std::complex<double> temp_mean;
@@ -84,7 +97,7 @@ namespace wno
         temp_mean = (0.0, 0.0);
         sqr_sum = 0.0;
 
-        int N = 64;
+        int N = pnSize;
         double numr;
         double denm;
         double pn_mean = 0.0;
@@ -105,15 +118,8 @@ namespace wno
         numr = abs(temp_mul-scaled_temp_mean);
         denm = sqrt(sqr_sum-N*pow(abs(temp_mean),2))*sqrt(N);
         if (denm == 0)
-            return(false);
+            return(0.001);
         corr_coeff = numr/denm;
-
-        if(corr_coeff>COEFFTHRESH)
-        {
-            std::cout << "Correlation coefficient above threshold. " << corr_coeff  << std::endl;
-            return(true);
-        }
-        else
-            return (false);
+        return(corr_coeff);
     }
 }

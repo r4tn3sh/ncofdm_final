@@ -27,7 +27,7 @@ namespace wno
         virtual void work(); //!< Signal processing happens here.
 
     private:
-        bool correlate(std::vector<std::complex<double> >);
+        double correlate(std::vector<std::complex<double> >);
         std::vector<std::complex<double> > m_carryover;
     };
 }

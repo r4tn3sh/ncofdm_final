@@ -46,9 +46,11 @@ void test_sim()
     frame_builder * fb = new frame_builder();
     receiver_chain * receiver = new receiver_chain();
 
-    std::string data("I'm a little tea pot, short and stout.....here is my handle.....blah blah blah.....this rhyme sucks!");
-    int repeat = 15;
+    // Generate the data
+    std::string data("This is a test string. Beware! it might not reach destination.\n");
+    int repeat = 20;
 
+    // copy the data in payload
     std::vector<unsigned char> payload(data.length()*repeat); //Payload = 1500 bytes
     for(int x = 0; x < repeat; x++) memcpy(&payload[x*data.length()], &data[0], data.length());
 
@@ -58,8 +60,8 @@ void test_sim()
     int pad_length = samples.size()*1000;
 
     // Concatenate num_frames frames together
-    int num_frames = 100;
-    std::cout << "Transmitting " << num_frames << " frames" << std::endl;
+    int num_frames = 10;
+    std::cout << "Transmitting " << num_frames << " frame, sample size : " << samples.size() << std::endl;
     std::vector<std::complex<double>> samples_con(samples.size() * num_frames + pad_length);
     for(int x = 0; x < num_frames; x++)
     {
