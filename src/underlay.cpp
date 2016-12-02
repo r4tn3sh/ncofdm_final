@@ -28,7 +28,10 @@ namespace wno
             // Add 240 240 80 80 80 ......
             // output[x] += std::complex<double>(0.00316227766,0)*SPNS[z]; // adding signal 15dB below
             // output[x] += std::complex<double>(0.1*abs_data[x],0)*SPNS[z]; // adding signal 15dB below
-            output[x] += std::complex<double>(0.02,0)*SPNS[z]; // adding signal 10dB below
+            //
+            //
+            //output[x] += std::complex<double>(0.02,0)*SPNS[z]; // adding signal 10dB below
+            output[x] -= std::complex<double>(0.02,0)*SPNS[z]; // adding signal 10dB below
             z++;
             if(z>pnSize-1)
                 z=0;

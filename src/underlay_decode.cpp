@@ -17,7 +17,7 @@
 
 #include "preamble.h"
 #include "underlay.h"
-#define COEFFTHRESH 0.13
+#define COEFFTHRESH 0.15
 #define CARRYOVER_LENGTH pnSize
 namespace wno
 {
@@ -59,7 +59,7 @@ namespace wno
             std::vector<std::complex<double> > newVec(first, last);
             corr_coeff = correlate(newVec);
             // myfile << std::fixed << std::setprecision(8) << corr_coeff << std::endl;
-            if(corr_coeff>COEFFTHRESH)
+            if(corr_coeff>COEFFTHRESH || corr_coeff<0-COEFFTHRESH)
             {
                 std::cout <<  x << " " << corr_coeff << std::endl;
             }
@@ -98,6 +98,7 @@ namespace wno
         sqr_sum = 0.0;
 
         int N = pnSize;
+        std::complex<double> cplx_numr;
         double numr;
         double denm;
         double pn_mean = 0.0;
@@ -115,11 +116,17 @@ namespace wno
         temp_mean/=N;
         temp_norm_v = 0.0;
         std::complex<double> scaled_temp_mean = N*pn_mean*temp_mean;
+        cplx_numr = (temp_mul-scaled_temp_mean);
         numr = abs(temp_mul-scaled_temp_mean);
         denm = sqrt(sqr_sum-N*pow(abs(temp_mean),2))*sqrt(N);
-        if (denm == 0)
-            return(0.001);
-        corr_coeff = numr/denm;
+        if (denm == 0) // Is it the right way to do it ??
+            return(0.00001);
+        if (cplx_numr.real()>0)
+            corr_coeff = numr/denm;
+        else
+            corr_coeff = 0.0-numr/denm;
+        // corr_coeff = numr/denm;
+        // corr_coeff = cplx_numr.real()/denm;
         return(corr_coeff);
     }
 }
