@@ -21,6 +21,7 @@ namespace wno
         // std::cout << "Sum of data in buffer of size "<< overlay_data.size()<< " is " << sum << std::endl;
         // Assuming that average amplitude of overlay_data is ~0.1
         int z = 0;
+        int polarity = 1; // transmit alternate +1 and -1
         std::vector<std::complex<double> > output = overlay_data;
         for(int x = 0; x < overlay_data.size(); x++)
         {
@@ -29,12 +30,14 @@ namespace wno
             // output[x] += std::complex<double>(0.00316227766,0)*SPNS[z]; // adding signal 15dB below
             // output[x] += std::complex<double>(0.1*abs_data[x],0)*SPNS[z]; // adding signal 15dB below
             //
-            //
-            //output[x] += std::complex<double>(0.02,0)*SPNS[z]; // adding signal 10dB below
-            output[x] -= std::complex<double>(0.02,0)*SPNS[z]; // adding signal 10dB below
+            // output[x] += std::complex<double>(polarity*0.019342,0)*SPNS[z]; // adding signal 12dB below
+            output[x] += std::complex<double>(polarity*0.0159,0)*SPNS[z]; // adding signal 12dB below
             z++;
             if(z>pnSize-1)
+            {
                 z=0;
+                polarity  = 0-polarity;
+            }
         }
         return output;
     }

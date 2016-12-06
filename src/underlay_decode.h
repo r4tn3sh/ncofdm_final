@@ -28,6 +28,8 @@ namespace wno
 
     private:
         double correlate(std::vector<std::complex<double> >);
+        int prev_bit = 0;
+        int bits_in_error = 0;
         std::vector<std::complex<double> > m_carryover;
     };
 }

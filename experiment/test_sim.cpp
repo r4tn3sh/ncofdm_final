@@ -47,14 +47,12 @@ void test_sim()
     receiver_chain * receiver = new receiver_chain();
 
     // Generate the data
-    std::string data("This is a test string. Beware! it might not reach destination............\n");
-    int repeat = 16;
+    std::string data("This is a test string. Beware! it might not reach destination............");
+    int repeat = 50;
 
     // copy the data in payload
     std::vector<unsigned char> payload(data.length()*repeat); //Payload = 1500 bytes
     for(int x = 0; x < repeat; x++) memcpy(&payload[x*data.length()], &data[0], data.length());
-
-    
 
     // Build a frame
     std::vector<std::complex<double>> samples = fb->build_frame(payload, phy_rate);

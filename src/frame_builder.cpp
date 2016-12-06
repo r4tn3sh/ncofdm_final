@@ -14,6 +14,9 @@
 
 #include <arpa/inet.h>
 #include <boost/crc.hpp>
+#include <iostream>
+#include <fstream>
+#include <stddef.h>
 
 #include "frame_builder.h"
 #include "interleaver.h"
@@ -94,15 +97,23 @@ namespace wno
         memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
         memcpy(&frame[320], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
 
-        // Make the payload size to a muliple of PN-sequence size. (for convenience)
+        // Make the payload size to a multiple of PN-sequence size. (for convenience)
         int pad_length = pnSize - frame.size()%pnSize;
+        std::cout << "padding zeros : " << pad_length << std::endl;
         std::vector<std::complex<double> > paddedframe(frame.size() + pad_length);
         memcpy(&paddedframe[0], &frame[0], frame.size() * sizeof(std::complex<double>));
         for(int x=0; x<pad_length; x++)
         {
             paddedframe[frame.size()+x] = std::complex<double>(0.0,0.0);
         }
+        // save data for analysis
+        std::ofstream outfile;
+        // if (not null)
+        outfile.open("overlay_data.dat", std::ofstream::binary);
+        if (outfile.is_open())
+            outfile.write((const char*)&paddedframe.front(), paddedframe.size()*sizeof(std::complex<double>));
 
+        outfile.close();
         //XXX:Adding underlay after preamble. still in testing phase
         underlay ul = underlay();
         std::vector<std::complex<double> > combined = ul.add_underlay(paddedframe);

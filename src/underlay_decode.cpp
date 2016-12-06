@@ -17,7 +17,7 @@
 
 #include "preamble.h"
 #include "underlay.h"
-#define COEFFTHRESH 0.15
+#define COEFFTHRESH 0.1
 #define CARRYOVER_LENGTH pnSize
 namespace wno
 {
@@ -59,10 +59,23 @@ namespace wno
             std::vector<std::complex<double> > newVec(first, last);
             corr_coeff = correlate(newVec);
             // myfile << std::fixed << std::setprecision(8) << corr_coeff << std::endl;
-            if(corr_coeff>COEFFTHRESH || corr_coeff<0-COEFFTHRESH)
+            if(corr_coeff>COEFFTHRESH)
             {
-                std::cout <<  x << " " << corr_coeff << std::endl;
+                // bit 1 received
+                if (prev_bit == 1)
+                    bits_in_error++;
+                prev_bit = 1;
+                std::cout <<  x << " " << corr_coeff << " " << bits_in_error << std::endl;
             }
+            else if(corr_coeff<0-COEFFTHRESH)
+            {
+                // bit 0 (-1) received
+                if (prev_bit == 0)
+                    bits_in_error++;
+                prev_bit = 0;
+                std::cout <<  x << " " << corr_coeff << " " << bits_in_error << std::endl;
+            }
+
             // if (correlate(newVec))
             // {
             //     // std::cout << "PN seq found at " << x << std::endl;
