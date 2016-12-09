@@ -18,6 +18,8 @@
 #include "preamble.h"
 #include "underlay.h"
 #define COEFFTHRESH 0.1
+#define UPCOEFFTHRESH 0.15
+#define SEARCHWINDOW 50
 #define CARRYOVER_LENGTH pnSize
 namespace wno
 {
@@ -51,29 +53,55 @@ namespace wno
 
         // Step through the samples
         // std::cout << "Input buffer size : " << input_buffer.size() << std::endl;
+        int in_size = input_buffer.size();
+        int next_x = 0;
+        int conf = prev_conf;
         for(int x = 0; x < input_buffer.size(); x++)
         {
             // output_buffer[x].tag = NONE;
             std::vector<std::complex<double> >::const_iterator first = input.begin() + x;
             std::vector<std::complex<double> >::const_iterator last = input.begin() + x + pnSize-1;
             std::vector<std::complex<double> > newVec(first, last);
-            corr_coeff = correlate(newVec);
-            // myfile << std::fixed << std::setprecision(8) << corr_coeff << std::endl;
-            if(corr_coeff>COEFFTHRESH)
+            if (x==next_x)
             {
-                // bit 1 received
-                if (prev_bit == 1)
-                    bits_in_error++;
-                prev_bit = 1;
-                std::cout <<  x << " " << corr_coeff << " " << bits_in_error << std::endl;
+                conf--;
+                // std::cout<< conf  << "*"<< x<< "*"<< next_x << std::endl;
+                corr_coeff = correlate(newVec);
+                next_x = (x+1)%in_size;
             }
-            else if(corr_coeff<0-COEFFTHRESH)
+            else
             {
-                // bit 0 (-1) received
-                if (prev_bit == 0)
-                    bits_in_error++;
-                prev_bit = 0;
-                std::cout <<  x << " " << corr_coeff << " " << bits_in_error << std::endl;
+                continue;
+            }
+            // myfile << std::fixed << std::setprecision(8) << corr_coeff << std::endl;
+            if(corr_coeff>COEFFTHRESH || corr_coeff<0-COEFFTHRESH)
+            {
+                if (corr_coeff>0) // bit '1' received
+                {
+                    if (prev_bit == 1) bits_in_error++;
+                    prev_bit = 1;
+                }
+                else if (corr_coeff<0) // bit '0' received
+                {
+                    if (prev_bit == 0) bits_in_error++;
+                    prev_bit = 0;
+                }
+
+                if(corr_coeff>UPCOEFFTHRESH || corr_coeff< 0 - UPCOEFFTHRESH) // very high correlation received
+                {
+                    conf = 100; // increase confidance to max
+                }
+                else 
+                {
+                    if (conf > 0) conf = 100; // peak detected in expected zone
+                }
+
+                if (conf < 100)
+                    next_x = (x+1)%in_size;
+                else
+                    next_x = (x+pnSize-SEARCHWINDOW)%in_size; // go to 50 samples behind expected peak
+
+                std::cout <<  x << " " << corr_coeff << " " << bits_in_error  << " " << next_x<< " " << prev_bit << std::endl;
             }
 
             // if (correlate(newVec))
@@ -86,6 +114,7 @@ namespace wno
             //     //
             // }
         }
+        prev_conf = conf;
         // myfile.close();
         memcpy(&output_buffer[0],
                 &input[0],

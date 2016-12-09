@@ -6,7 +6,8 @@
 #include <random>
 
 #define TOTAL_SIZE 240
-#define UL_AMP 0.0159
+#define UL_AMP 0.0156 // -17dB
+#define NO_AMP 0.0111 // -20dB
 namespace wno
 {
     underlay::underlay()
@@ -29,19 +30,15 @@ namespace wno
         int polarity = 1; // transmit alternate +1 and -1
         double noise;
         std::default_random_engine generator;
-        std::normal_distribution<double> distribution(0.1*UL_AMP,0.1*UL_AMP);
+        std::normal_distribution<double> distribution(NO_AMP,0.1*NO_AMP);
         std::vector<std::complex<double> > output = overlay_data;
         for(int x = 0; x < overlay_data.size(); x++)
         {
             abs_data[x] = std::abs(overlay_data[x]);
             // Add 240 240 80 80 80 ......
-            // output[x] += std::complex<double>(0.00316227766,0)*SPNS[z]; // adding signal 15dB below
-            // output[x] += std::complex<double>(0.1*abs_data[x],0)*SPNS[z]; // adding signal 15dB below
-            // output[x] += std::complex<double>(polarity*0.019342,0)*SPNS[z]; // adding signal 12dB below
             output[x] += std::complex<double>(polarity*UL_AMP,0)*SPNS[z]; // adding signal 12dB below
             noise = distribution(generator);
-            std::cout << noise << std::endl;
-            output[x] += std::complex<double>(noise,0); // adding signal 12dB below
+            output[x] += std::complex<double>(noise,0); // Only for simulation 
             z++;
             if(z>pnSize-1)
             {
