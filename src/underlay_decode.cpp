@@ -17,9 +17,9 @@
 
 #include "preamble.h"
 #include "underlay.h"
-#define COEFFTHRESH 0.1
-#define UPCOEFFTHRESH 0.15
-#define SEARCHWINDOW 50
+#define COEFFTHRESH 0.06
+#define UPCOEFFTHRESH 0.1
+#define SEARCHWINDOW 10
 #define CARRYOVER_LENGTH pnSize
 namespace wno
 {

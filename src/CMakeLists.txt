@@ -25,6 +25,8 @@ list(APPEND headers
     fft.h
     fft_symbols.h
     frame_builder.h
+    basic_nc_frame_builder.h
+    basic_payload_builder.h
     symbol_builder.h
     frame_decoder.h
     frame_detector.h
@@ -36,6 +38,7 @@ list(APPEND headers
     puncturer.h
     receiver_chain.h
     symbol_mapper.h
+    subcarrier_mapper.h
     timing_sync.h
     usrp.h
     viterbi.h
@@ -52,6 +55,8 @@ list(APPEND sources
     fft.cpp
     fft_symbols.cpp
     frame_builder.cpp
+    basic_nc_frame_builder.cpp
+    basic_payload_builder.cpp
     symbol_builder.cpp
     frame_decoder.cpp
     frame_detector.cpp
@@ -63,6 +68,7 @@ list(APPEND sources
     puncturer.cpp
     receiver_chain.cpp
     symbol_mapper.cpp
+    subcarrier_mapper.cpp
     timing_sync.cpp
     usrp.cpp
     viterbi.cpp

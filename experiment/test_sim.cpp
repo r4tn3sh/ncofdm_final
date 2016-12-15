@@ -48,7 +48,7 @@ void test_sim()
 
     // Generate the data
     std::string data("This is a test string. Beware! it might not reach destination............");
-    int repeat = 50;
+    int repeat = 60;
 
     // copy the data in payload
     std::vector<unsigned char> payload(data.length()*repeat); //Payload = 1500 bytes
@@ -77,7 +77,7 @@ void test_sim()
 
     // Run the samples through the receiver chain
 
-    int chunk_size = 4096;
+    int chunk_size = 4000;
 
     int count = 0;
     for(int x = 0; x < samples_con.size(); x += chunk_size)
