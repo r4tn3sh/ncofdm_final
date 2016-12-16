@@ -6,8 +6,8 @@
 #include <random>
 
 #define TOTAL_SIZE 240
-#define UL_AMP 0.0156 // -17dB
-#define NO_AMP 0.0111 // -20dB
+#define UL_AMP 0.0125 // 20dB below when all 64 SCs are used
+#define NO_AMP 0.004 // actually std dev for -30dB
 namespace wno
 {
     underlay::underlay()
@@ -30,7 +30,7 @@ namespace wno
         int polarity = 1; // transmit alternate +1 and -1
         double noise;
         std::default_random_engine generator;
-        std::normal_distribution<double> distribution(NO_AMP,0.1*NO_AMP);
+        std::normal_distribution<double> distribution(0.0,NO_AMP);
         std::vector<std::complex<double> > output = overlay_data;
         for(int x = 0; x < overlay_data.size(); x++)
         {

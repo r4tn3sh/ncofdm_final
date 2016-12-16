@@ -1,10 +1,6 @@
 /*! \file basic_payload_builder.cpp
  *  \brief C++ file for the basic_payload_builder class.
  *
- * The basic_payload_builder class is a container for a basic_payload_builder which is made up of a PHY Header,
- * otherwise known as a PLCP Header, and a payload of bytes. The class also
- * has functions for encoding and decoding the header and payload based on the
- * PHY transmission rates.
  */
 
 #include <arpa/inet.h>
@@ -21,7 +17,7 @@
 namespace wno
 {
     /*!
-     * This constructor creates an empty BASIC_PAYLOAD_BUILDER with the default/empty plcp_header constructor
+     * This constructor creates an empty BASIC_PAYLOAD_BUILDER with the default/empty  constructor
      */
     basic_payload_builder::basic_payload_builder()
     {
@@ -29,8 +25,9 @@ namespace wno
         // m_rate and m_length don't have default value
     }
 
+    // TODO:remove the following constructor
     /*!
-     * This constructor creates a BASIC_PAYLOAD_BUILDER with a header, but no payload field.
+     * This constructor creates a BASIC_PAYLOAD_BUILDER with a , but no payload field.
      */
     basic_payload_builder::basic_payload_builder(Rate rate, int length)
     {
@@ -45,7 +42,7 @@ namespace wno
 
 
     /*!
-     * This constructor creates a complete BASIC_PAYLOAD_BUILDER with header and payload.
+     * This constructor creates a complete BASIC_PAYLOAD_BUILDER with   payload.
      */
     basic_payload_builder::basic_payload_builder(std::vector<unsigned char> payload, Rate rate) :
         payload(payload)
@@ -60,7 +57,7 @@ namespace wno
     }
 
     /*!
-     * Public wrapper for encoding the header & payload and concatenating them together into a
+     * Public wrapper for encoding the  payload and concatenating them together into a
      * PHY frame.
      */
     std::vector<std::complex<double> > basic_payload_builder::encode()
@@ -113,6 +110,8 @@ namespace wno
 
         // Modulated the data
         std::vector<std::complex<double> > data_modulated = modulator::modulate(data_encoded, m_rate);
+
+        // TODO: Add a header here for each frame with some information, make size to be 80
 
         return data_modulated;
     }

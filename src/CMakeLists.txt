@@ -47,6 +47,7 @@ list(APPEND headers
     receiver.h
     underlay.h
     underlay_decode.h
+    underlay_tagged_decode.h
 )
 
 list(APPEND sources 
@@ -77,6 +78,7 @@ list(APPEND sources
     receiver.cpp
     underlay.cpp
     underlay_decode.cpp
+    underlay_tagged_decode.cpp
 )
 
 

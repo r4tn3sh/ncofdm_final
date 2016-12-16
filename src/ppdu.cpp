@@ -270,27 +270,29 @@ namespace wno
         unsigned int given_crc = 0;
         memcpy(&given_crc, &decoded[2 + header.length], 4);
 
-        // Verify the CRC
         if(given_crc != calculated_crc)
-        {
-            std::cerr << "Invalid CRC (length " << header.length << ")" << std::endl;
-            // Indicate failure
-            return false;
-        }
-        else
-        {
+             std::cout << "Invalid CRC (length " << header.length << ") " << calculated_crc << std::endl;
+        // // Verify the CRC
+        // if(given_crc != calculated_crc)
+        // {
+        //     std::cerr << "Invalid CRC (length " << header.length << ") " << calculated_crc << std::endl;
+        //     // Indicate failure
+        //     return false;
+        // }
+        // else
+        // {
             // Copy the payload
-    //        std::vector<unsigned char> payload(length);
+            //        std::vector<unsigned char> payload(length);
             payload.resize(header.length);
             memcpy(&payload[0], &decoded[2 /* skip the service field */], header.length);
 
             // Fill the output values
-    //        data_out.rate = rate;
+            //        data_out.rate = rate;
             memcpy(&header.service, &decoded[0], 2);
-    //        data_out.length = length;
+            //        data_out.length = length;
             // Indicate success
             return true;
-        }
+        // }
 
     }
 

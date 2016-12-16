@@ -74,22 +74,29 @@ namespace wno
             memcpy(&prefixed[x*80], &mapped[x*64+48], 16*sizeof(std::complex<double>));
             memcpy(&prefixed[x*80+16], &mapped[x*64], 64*sizeof(std::complex<double>));
         }
-        // ---------- Underlay after preamble ----------
-        // Prepend the preamble
-        std::vector<std::complex<double> > frame(prefixed.size() + 320);
+        // // ---------- Underlay after preamble ----------
+        // // Prepend the preamble
+        // std::vector<std::complex<double> > frame(prefixed.size() + 320);
 
-        memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
-        memcpy(&frame[320], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
+        // memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
+        // memcpy(&frame[320], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
 
+        std::vector<std::complex<double> > frame(prefixed.size());
+        memcpy(&frame[0], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
+
+        // XXX: Be careful with following
         // Make the payload size to a multiple of PN-sequence size. (for convenience)
         int pad_length = pnSize - frame.size()%pnSize;
+        
         std::cout << "padding zeros : " << pad_length << std::endl;
+        
         std::vector<std::complex<double> > paddedframe(frame.size() + pad_length);
         memcpy(&paddedframe[0], &frame[0], frame.size() * sizeof(std::complex<double>));
         for(int x=0; x<pad_length; x++)
         {
             paddedframe[frame.size()+x] = std::complex<double>(0.0,0.0);
         }
+
         // save data for analysis
         std::ofstream outfile;
         // if (not null)
@@ -98,7 +105,7 @@ namespace wno
             outfile.write((const char*)&paddedframe.front(), paddedframe.size()*sizeof(std::complex<double>));
 
         outfile.close();
-        //XXX:Adding underlay after preamble. still in testing phase
+        // XXX:Adding underlay
         underlay ul = underlay();
         std::vector<std::complex<double> > combined = ul.add_underlay(paddedframe);
         
