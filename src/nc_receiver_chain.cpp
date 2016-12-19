@@ -17,25 +17,18 @@ namespace wno
 {
     /*!
      * -Initializes each receiver chain block:
-     *  + frame_detector
-     *  + timing_sync
+     *  + underlay_tagged_decoder
      *  + fft_symbols
-     *  + channel_est
-     *  + phase_tracker
-     *  + frame_decoder
+     *  + basic_nc_frame_decode
      *
      *  Adds each block to the receiver chain.
      */
     nc_receiver_chain::nc_receiver_chain(uint64_t sc_map)
     {
         m_sc_map = sc_map;
-        m_ul_decoder = new underlay_decode();
-        m_frame_detector = new frame_detector();
-        m_timing_sync = new timing_sync();
+        m_ul_tagged_decoder = new underlay_tagged_decode();
         m_fft_symbols = new fft_symbols();
-        m_channel_est = new channel_est();
-        m_phase_tracker = new phase_tracker();
-        m_frame_decoder = new frame_decoder();
+        m_nc_frame_decoder = new basic_nc_frame_decoder(m_sc_map);
 
         // We use semaphore references, so we don't
         // want them to move to a different memory location
@@ -44,13 +37,9 @@ namespace wno
         m_done_sems.reserve(100);
 
         // Add the blocks to the receiver chain
-        add_block(m_ul_decoder);
-        add_block(m_frame_detector);
-        add_block(m_timing_sync);
+        add_block(m_ul_tagged_decoder);
         add_block(m_fft_symbols);
-        add_block(m_channel_est);
-        add_block(m_phase_tracker);
-        add_block(m_frame_decoder);
+        add_block(m_nc_frame_decoder);
     }
 
     /*!
@@ -110,7 +99,7 @@ namespace wno
     {
         // samples -> sync short in
         // m_frame_detector->input_buffer.swap(samples);
-        m_ul_decoder->input_buffer.swap(samples);
+        m_ul_tagged_decoder->input_buffer.swap(samples);
 
         // Unlock the threads
         for(int x = 0; x < m_wake_sems.size(); x++) sem_post(&m_wake_sems[x]);
@@ -119,15 +108,11 @@ namespace wno
         for(int x = 0; x < m_done_sems.size(); x++) sem_wait(&m_done_sems[x]);
 
         // Update the buffers
-        m_frame_detector->input_buffer.swap(m_ul_decoder->output_buffer);
-        m_timing_sync->input_buffer.swap(m_frame_detector->output_buffer);
-        m_fft_symbols->input_buffer.swap(m_timing_sync->output_buffer);
-        m_channel_est->input_buffer.swap(m_fft_symbols->output_buffer);
-        m_phase_tracker->input_buffer.swap(m_channel_est->output_buffer);
-        m_frame_decoder->input_buffer.swap(m_phase_tracker->output_buffer);
+        m_fft_symbols->input_buffer.swap(m_ul_tagged_decoder->output_buffer);
+        m_nc_frame_decoder->input_buffer.swap(m_fft_symbols->output_buffer);
 
         // Return any completed packets
-        return m_frame_decoder->output_buffer;
+        return m_nc_frame_decoder->output_buffer;
     }
 
 }

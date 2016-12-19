@@ -84,6 +84,8 @@ namespace wno
         frame_decoder(); //!< Constructor for frame_decoder block.
 
         virtual void work(); //!< Signal processing happens here.
+        uint64_t m_sc_map;
+        int m_total_subcarrier_count;
 
     private:
 

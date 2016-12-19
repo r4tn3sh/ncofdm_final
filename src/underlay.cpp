@@ -3,11 +3,14 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 #include <random>
 
 #define TOTAL_SIZE 240
-#define UL_AMP 0.0125 // 20dB below when all 64 SCs are used
-#define NO_AMP 0.004 // actually std dev for -30dB
+// #define UL_AMP 0.0125 // 20dB below when all 64 SCs are used
+// #define NO_AMP 0.004 // actually std dev for -30dB
+#define UL_AMP 0.022 // 15dB below when all 64 SCs are used
+#define NO_AMP 0.0//22 // 15dB
 namespace wno
 {
     underlay::underlay()
@@ -18,13 +21,15 @@ namespace wno
         std::vector<double>abs_data(overlay_data.size());// = std::abs(overlay_data);
         std::cout << "Buffer of size "<< overlay_data.size() << std::endl;
         std::srand(std::time(0)); // use current time as seed for random generator
-        // for(int x = 0; x < overlay_data.size(); x++)
-        // {
-        //     abs_data[x] = std::abs(overlay_data[x]);
-        //     std::cout << "Abs  " << abs_data[x] << std::endl;
-        // }
-        // double sum = std::accumulate(abs_data.begin(), abs_data.end(), 0.0);
-        // std::cout << "Sum of data in buffer of size "<< overlay_data.size()<< " is " << sum << std::endl;
+
+        for(int x = 0; x < overlay_data.size(); x++)
+        {
+            abs_data[x] = pow(std::abs(overlay_data[x]),2);
+        }
+        double sum = std::accumulate(abs_data.begin(), abs_data.end(), 0.0);
+        double avg_power = sum/overlay_data.size();
+        std::cout << "Avg power of the data is " << avg_power << std::endl;
+
         // Assuming that average amplitude of overlay_data is ~0.1
         int z = 0;
         int polarity = 1; // transmit alternate +1 and -1
@@ -35,8 +40,11 @@ namespace wno
         for(int x = 0; x < overlay_data.size(); x++)
         {
             abs_data[x] = std::abs(overlay_data[x]);
-            // Add 240 240 80 80 80 ......
+
+            // Add underlay signal
             output[x] += std::complex<double>(polarity*UL_AMP,0)*SPNS[z]; // adding signal 12dB below
+
+            // XXX: Add noise for simulation
             noise = distribution(generator);
             output[x] += std::complex<double>(noise,0); // Only for simulation 
             z++;
@@ -46,6 +54,13 @@ namespace wno
                 polarity  = 0-polarity;
             }
         }
+        for(int x = 0; x < overlay_data.size(); x++)
+        {
+            abs_data[x] = pow(std::abs(output[x]),2);
+        }
+        sum = std::accumulate(abs_data.begin(), abs_data.end(), 0.0);
+        avg_power = sum/overlay_data.size();
+        std::cout << "Avg power of the output is " << avg_power << std::endl;
         return output;
     }
     

@@ -14,14 +14,10 @@
 #include <semaphore.h>
 
 #include "fft_symbols.h"
-#include "channel_est.h"
-#include "phase_tracker.h"
-#include "frame_decoder.h"
 #include "block.h"
 #include "tagged_vector.h"
-#include "frame_detector.h"
-#include "timing_sync.h"
-#include "underlay_decode.h"
+#include "basic_nc_frame_decoder.h"
+#include "underlay_tagged_decode.h"
 
 namespace wno
 {
@@ -62,13 +58,9 @@ namespace wno
          * Blocks *
          **********/
 
-        underlay_decode * m_ul_decoder;
-        frame_detector * m_frame_detector;     //!< Detects start of frame using STS
-        timing_sync    * m_timing_sync;        //!< Aligns frame in time using LTS & some freq correction
+        underlay_tagged_decode * m_ul_tagged_decoder;
         fft_symbols    * m_fft_symbols;        //!< Forward FFT of symbols
-        channel_est    * m_channel_est;        //!< Channel estimation and equalization in freq domain
-        phase_tracker  * m_phase_tracker;      //!< Phase rotation tracking
-        frame_decoder  * m_frame_decoder;      //!< Frame decoding
+        basic_nc_frame_decoder  * m_nc_frame_decoder;      //!< Frame decoding
 
         /***********************************
          * Scheduler Variables and Methods *

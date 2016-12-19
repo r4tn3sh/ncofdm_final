@@ -7,6 +7,7 @@
  */
 
 #include <cstring>
+#include <iostream>
 
 #include "channel_est.h"
 #include "preamble.h"
@@ -62,6 +63,7 @@ namespace wno
                 {
                     m_lts_flag = 0;
                     m_frame_start = true; // Next symbol is the start of frame
+                    std::cout << "**start of a frame found" << std::endl;
                 }
             }
             else

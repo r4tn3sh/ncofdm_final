@@ -5,7 +5,7 @@
 #include <complex>
 #include <vector>
 
-#define pnSize 2000
+#define pnSize 1600
 
 #ifndef UNDERLAY_H
 #define UNDERLAY_H

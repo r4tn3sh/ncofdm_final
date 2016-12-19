@@ -39,7 +39,7 @@ namespace wno
         for(int x = 0; x < input_buffer.size(); x++)
         {
             // Check if this is the start of a new frame
-            if(input_buffer[x].tag == LTS1 || input_buffer[x].tag == ULPN)
+            if(input_buffer[x].tag == LTS1)
             {
                 // Push the current vector to the output buffer if
                 // we've written any data to it
@@ -47,6 +47,16 @@ namespace wno
 
                 // Start a new vector
                 m_current_vector.tag = LTS_START;
+                m_offset = 16;
+            }
+            if(input_buffer[x].tag == ULPN)
+            {
+                // Push the current vector to the output buffer if
+                // we've written any data to it
+                if(m_offset > 15) output_buffer.push_back(m_current_vector);
+
+                // Start a new vector
+                m_current_vector.tag = ULPN;
                 m_offset = 16;
             }
 

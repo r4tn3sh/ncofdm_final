@@ -75,7 +75,11 @@ namespace wno
                 ppdu h = ppdu();
                 std::vector<std::complex<double> > header_samples(48);
                 memcpy(header_samples.data(), input_buffer[x].samples, 48 * sizeof(std::complex<double>));
-                if(!h.decode_header(header_samples)) continue;
+                if(!h.decode_header(header_samples)) 
+                {
+                    std::cout << "frame could not be decoded" << std::endl;
+                    continue;
+                }
 
                 // Calculate the frame sample count
                 int length = h.get_length();

@@ -111,7 +111,8 @@ namespace wno
         // Modulated the data
         std::vector<std::complex<double> > data_modulated = modulator::modulate(data_encoded, m_rate);
 
-        // TODO: Add a header here for each frame with some information, make size to be 80
+        // TODO: Add a header here for each frame with some information, make size to be 64
+        // should this header have avg power same as the modulated data??
 
         return data_modulated;
     }

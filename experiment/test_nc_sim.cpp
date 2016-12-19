@@ -10,8 +10,8 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/program_options.hpp>
 #include "usrp.h"
-#include "frame_builder.h"
-#include "receiver_chain.h"
+#include "basic_nc_frame_builder.h"
+#include "nc_receiver_chain.h"
 
 using namespace wno;
 
@@ -26,6 +26,7 @@ double amp = 0.5;
 //Rate phy_rate = RATE_1_2_QAM16;
 //Rate phy_rate = RATE_2_3_QAM64;
 Rate phy_rate = RATE_3_4_QAM16;
+uint64_t sc_map = 17592186040320 //00000ffffffff000
 
 int main(int argc, char * argv[]){
 
@@ -43,8 +44,8 @@ int main(int argc, char * argv[]){
 void test_sim()
 {
 
-    frame_builder * fb = new frame_builder();
-    receiver_chain * receiver = new receiver_chain();
+    basic_nc_frame_builder * fb = new frame_builder();
+    receiver_chain * receiver = new receiver_chain(sc_map);
 
     // Generate the data
     std::string data("This is a test string. Beware! it might not reach destination............");
@@ -55,7 +56,7 @@ void test_sim()
     for(int x = 0; x < repeat; x++) memcpy(&payload[x*data.length()], &data[0], data.length());
 
     // Build a frame
-    std::vector<std::complex<double>> samples = fb->build_frame(payload, phy_rate);
+    std::vector<std::complex<double>> samples = fb->build_frame(payload, phy_rate, sc_map);
 
     int pad_length = 0;//samples.size()*1000;
 

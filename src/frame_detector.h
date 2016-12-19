@@ -9,7 +9,7 @@
 #define FRAME_DETECTOR_H
 
 //Tweakable Parameters
-#define PLATEAU_THRESHOLD 0.9
+#define PLATEAU_THRESHOLD 0.7 //0.9
 #define STS_PLATEAU_LENGTH 16
 
 #define STS_LENGTH 16
