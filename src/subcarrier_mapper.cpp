@@ -88,18 +88,19 @@ namespace wno
         // map where the data and pilot go
         int loc_count = 0;
         int pilot_count = 0;
+	m_active_map.resize(64);
         for(int x=0; x<64; x++)
         {
-            m_active_map.at(x) = '0'; // null SC
+            m_active_map[x] = '0'; // null SC
             if (((sc_map>>x)&0x1) == 1)
             {
-                m_active_map.at(x) = '1'; // data SC
+                m_active_map[x] = '1'; // data SC
                 loc_count++;
                 // TODO: check if you are actually using pilots at all
                 // XXX: Currently assuming every 8th SC used is pilot
                 if(loc_count%8 == 0) // every 8th SC is pilot
                 {
-                    m_active_map.at(x) = '2'; // pilot SC
+                    m_active_map[x] = '2'; // pilot SC
                     pilot_count++;
                 }
             }
@@ -119,6 +120,7 @@ namespace wno
     {
 
         // XXX: should this check be removed?
+	std::cout << "Total subcarriers : " << m_total_subcarrier_count << std::endl;
         assert(data_samples.size() % m_data_subcarrier_count == 0);
 
         std::complex<double> pilot_value = std::complex<double>(1, 0);
