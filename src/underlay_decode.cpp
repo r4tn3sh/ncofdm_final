@@ -76,15 +76,22 @@ namespace wno
             // myfile << std::fixed << std::setprecision(8) << corr_coeff << std::endl;
             if(corr_coeff>COEFFTHRESH || corr_coeff<0-COEFFTHRESH)
             {
-                if (corr_coeff>0) // bit '1' received
+                // //XXX: Following code assumes alternate 1 and -1
+                // if (corr_coeff>0) // bit '1' received
+                // {
+                //     if (prev_bit == 1) bits_in_error++;
+                //     prev_bit = 1;
+                // }
+                // else if (corr_coeff<0) // bit '0' received
+                // {
+                //     if (prev_bit == 0) bits_in_error++;
+                //     prev_bit = 0;
+                // }
+
+                //XXX: Following code assumes all 1s
+                if (corr_coeff<0) // bit '0' received
                 {
-                    if (prev_bit == 1) bits_in_error++;
-                    prev_bit = 1;
-                }
-                else if (corr_coeff<0) // bit '0' received
-                {
-                    if (prev_bit == 0) bits_in_error++;
-                    prev_bit = 0;
+                    bits_in_error++;
                 }
 
                 if(corr_coeff>UPCOEFFTHRESH || corr_coeff< 0 - UPCOEFFTHRESH) // very high correlation received
@@ -101,7 +108,7 @@ namespace wno
                 else
                     next_x = (x+pnSize-SEARCHWINDOW)%in_size; // go to 50 samples behind expected peak
 
-                std::cout <<  x << " " << corr_coeff << " " << bits_in_error  << " " << next_x<< " " << prev_bit << std::endl;
+                std::cout <<  x << " " << corr_coeff << " " << bits_in_error << std::endl;
             }
 
             // if (correlate(newVec))

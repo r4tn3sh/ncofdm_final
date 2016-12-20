@@ -59,10 +59,12 @@ namespace wno
         //Append header, scramble, code, interleave, & modulate
         ppdu ppdu_frame(payload, rate);        
         std::vector<std::complex<double> > samples = ppdu_frame.encode();
+        std::cout << "Encode frame :" << payload.size() << " --> " << samples.size() << std::endl;
 
         // Map the subcarriers and insert pilots
         symbol_mapper mapper = symbol_mapper();
         std::vector<std::complex<double> > mapped = mapper.map(samples);
+        std::cout << "Map subcarrier :" << samples.size() << " --> " << mapped.size() << std::endl;
 
         // Perform the IFFT
         m_ifft.inverse(mapped);
@@ -74,32 +76,19 @@ namespace wno
             memcpy(&prefixed[x*80], &mapped[x*64+48], 16*sizeof(std::complex<double>));
             memcpy(&prefixed[x*80+16], &mapped[x*64], 64*sizeof(std::complex<double>));
         }
+        std::cout << "Add CP :" << mapped.size() << " --> " << prefixed.size() << std::endl;
 
-        // ---------- Underlay before preamble ----------
-        // //XXX:Adding underlay before preamble. still in testing phase
-        // underlay ul = underlay();
-        // std::vector<std::complex<double> > combined = ul.add_underlay(prefixed);
-        // // std::vector<std::complex<double> > combined = prefixed;
-
-        // // Prepend the preamble
-        // std::vector<std::complex<double> > frame(combined.size() + 320);
-
-        // memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
-        // memcpy(&frame[320], &combined[0], combined.size() * sizeof(std::complex<double>));
-
-        // return frame;
-        // ---------------------------------------------
-        
         // ---------- Underlay after preamble ----------
         // Prepend the preamble
         std::vector<std::complex<double> > frame(prefixed.size() + 320);
 
         memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
         memcpy(&frame[320], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
+        std::cout << "Add Preamble :" << prefixed.size() << " --> " << frame.size() << std::endl;
 
-        // Make the payload size to a multiple of PN-sequence size. (for convenience)
+        //XXX: Make the payload size to a multiple of PN-sequence size. (for convenience)
         int pad_length = pnSize - frame.size()%pnSize;
-        std::cout << "padding zeros : " << pad_length << std::endl;
+        std::cout << frame.size() << "-*- padding zeros : " << pad_length <<  std::endl;
         std::vector<std::complex<double> > paddedframe(frame.size() + pad_length);
         memcpy(&paddedframe[0], &frame[0], frame.size() * sizeof(std::complex<double>));
         for(int x=0; x<pad_length; x++)

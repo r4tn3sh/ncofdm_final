@@ -68,33 +68,33 @@ namespace wno
     // subcarrier_mapper::subcarrier_mapper() :
     //     m_data_subcarrier_count(48),
     //     m_pilot_count(4)
-    subcarrier_mapper::subcarrier_mapper(uint64_t map_value)
+    subcarrier_mapper::subcarrier_mapper(uint64_t sc_map)
     {
         // std::stringstream str;
 
         // // Get the hex representation of allocation vector
         // str << mapping;
-        // int map_value;
-        // str >> std::hex >> map_value;
+        // int sc_map;
+        // str >> std::hex >> sc_map;
 
         // count number of bits in the allocation vector
         unsigned int temp_sc_count;
-        temp_sc_count = map_value - ((map_value >> 1) & 033333333333) - ((map_value >> 2) & 011111111111);
+        temp_sc_count = sc_map - ((sc_map >> 1) & 033333333333) - ((sc_map >> 2) & 011111111111);
         m_total_subcarrier_count = ((temp_sc_count + (temp_sc_count >> 3)) & 030707070707) % 63;
 
 
         // map where the data and pilot go
-        // XXX: Currently assuming every 8th SC used is pilot
         int loc_count = 0;
         int pilot_count = 0;
         for(int x=0; x<64; x++)
         {
             m_active_map.at(x) = '0'; // null SC
-            if (((map_value>>x)&0x1) == 1)
+            if (((sc_map>>x)&0x1) == 1)
             {
                 m_active_map.at(x) = '1'; // data SC
                 loc_count++;
                 // TODO: check if you are actually using pilots at all
+                // XXX: Currently assuming every 8th SC used is pilot
                 if(loc_count%8 == 0) // every 8th SC is pilot
                 {
                     m_active_map.at(x) = '2'; // pilot SC

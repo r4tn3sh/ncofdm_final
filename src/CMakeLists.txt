@@ -26,6 +26,7 @@ list(APPEND headers
     fft_symbols.h
     frame_builder.h
     basic_nc_frame_builder.h
+    basic_nc_frame_decoder.h
     basic_payload_builder.h
     symbol_builder.h
     frame_decoder.h
@@ -57,6 +58,7 @@ list(APPEND sources
     fft_symbols.cpp
     frame_builder.cpp
     basic_nc_frame_builder.cpp
+    basic_nc_frame_decoder.cpp
     basic_payload_builder.cpp
     symbol_builder.cpp
     frame_decoder.cpp

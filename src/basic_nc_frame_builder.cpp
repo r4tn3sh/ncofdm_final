@@ -59,10 +59,12 @@ namespace wno
         //code & modulate
         basic_payload_builder basic_payload(payload, rate);        
         std::vector<std::complex<double> > samples = basic_payload.encode();
+        std::cout << "Encode frame :" << payload.size() << " --> " << samples.size() << std::endl;
 
         // Map the subcarriers and insert pilots
         subcarrier_mapper mapper = subcarrier_mapper(sc_map);
         std::vector<std::complex<double> > mapped = mapper.map(samples);
+        std::cout << "Map subcarrier :" << samples.size() << " --> " << mapped.size() << std::endl;
 
         // Perform the IFFT
         m_ifft.inverse(mapped);
@@ -74,12 +76,9 @@ namespace wno
             memcpy(&prefixed[x*80], &mapped[x*64+48], 16*sizeof(std::complex<double>));
             memcpy(&prefixed[x*80+16], &mapped[x*64], 64*sizeof(std::complex<double>));
         }
-        // // ---------- Underlay after preamble ----------
-        // // Prepend the preamble
-        // std::vector<std::complex<double> > frame(prefixed.size() + 320);
+        std::cout << "Add CP :" << mapped.size() << " --> " << prefixed.size() << std::endl;
 
-        // memcpy(&frame[0], &PREAMBLE_SAMPLES[0], 320 * sizeof(std::complex<double>));
-        // memcpy(&frame[320], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
+        //XXX: We are not adding proamble here, relying on UL for timing
 
         std::vector<std::complex<double> > frame(prefixed.size());
         memcpy(&frame[0], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));

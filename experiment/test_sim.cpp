@@ -47,8 +47,8 @@ void test_sim()
     receiver_chain * receiver = new receiver_chain();
 
     // Generate the data
-    std::string data("This is a test string. Beware! it might not reach destination............");
-    int repeat = 47;
+    std::string data("This is a test string. Beware! it might not reach destination.............");
+    int repeat = 3;
 
     // copy the data in payload
     std::vector<unsigned char> payload(data.length()*repeat); //Payload = 1500 bytes
@@ -67,6 +67,8 @@ void test_sim()
     {
         memcpy(&samples_con[x*samples.size()], &samples[0], samples.size() * sizeof(std::complex<double>));
     }
+
+    //TODO: Ideally the underlay should be added here
 
     //Pad the end with 0's to flush receive chain
     std::vector<std::complex<double> > zeros(pad_length);

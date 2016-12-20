@@ -1,4 +1,4 @@
-/*! \file test_sim.cpp
+/*! \file test_nc_sim.cpp
  *  \brief Simulates the building of packets and sending them through the receive chain.
  *
  *  This file is used to simulate building packets with the frame_builder class and then
@@ -15,7 +15,7 @@
 
 using namespace wno;
 
-void test_sim();
+void test_nc_sim();
 
 double freq = 5.26e9;
 double sample_rate = 5e6;
@@ -26,12 +26,12 @@ double amp = 0.5;
 //Rate phy_rate = RATE_1_2_QAM16;
 //Rate phy_rate = RATE_2_3_QAM64;
 Rate phy_rate = RATE_3_4_QAM16;
-uint64_t sc_map = 17592186040320 //00000ffffffff000
+uint64_t SC_MAP = 17592186040320; //00000ffffffff000
 
 int main(int argc, char * argv[]){
 
     std::cout << "Running Simulation..." << std::endl;
-    test_sim();
+    test_nc_sim();
 
     return 0;
 }
@@ -41,11 +41,11 @@ int main(int argc, char * argv[]){
  *  This function builds some packets using the frame builder and sends them through
  *  the receiver chain.  This function does NOT use the transmitter and receiver classes.
  */
-void test_sim()
+void test_nc_sim()
 {
 
-    basic_nc_frame_builder * fb = new frame_builder();
-    receiver_chain * receiver = new receiver_chain(sc_map);
+    basic_nc_frame_builder * fb = new basic_nc_frame_builder();
+    nc_receiver_chain * receiver = new nc_receiver_chain(SC_MAP);
 
     // Generate the data
     std::string data("This is a test string. Beware! it might not reach destination............");
@@ -56,7 +56,7 @@ void test_sim()
     for(int x = 0; x < repeat; x++) memcpy(&payload[x*data.length()], &data[0], data.length());
 
     // Build a frame
-    std::vector<std::complex<double>> samples = fb->build_frame(payload, phy_rate, sc_map);
+    std::vector<std::complex<double>> samples = fb->build_frame(payload, phy_rate, SC_MAP);
 
     int pad_length = 0;//samples.size()*1000;
 

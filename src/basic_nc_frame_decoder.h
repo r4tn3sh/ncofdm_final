@@ -1,4 +1,4 @@
-/*! \file frame_decoder.h
+/*! \file basic_nc_frame_decoder.h
  *  \brief Header file for the Frame Decoder block and the FrameData struct.
  *
  * The Frame Decoder block is in charge of decoding the frame header and then the frame body.
@@ -9,8 +9,8 @@
  * the output_buffer as unsigned char's or bytes.
  */
 
-#ifndef FRAME_DECODER_H
-#define FRAME_DECODER_H
+#ifndef BASIC_NC_FRAME_DECODER_H
+#define BASIC_NC_FRAME_DECODER_H
 
 #include <complex>
 #include <deque>
@@ -65,7 +65,7 @@ namespace wno
     };
 
     /*!
-     * \brief The frame_decoder block.
+     * \brief The basic_nc_frame_decoder block.
      *
      * Inputs tagged_vector<48> from phase_tracker block.
      * Outputs std::vector<unsigned char> back to the receiver chain
@@ -77,11 +77,11 @@ namespace wno
      * decoding the frame as determined by an IEEE CRC-32 check the payload is passed into
      * the output_buffer as unsigned char's or bytes.
      */
-    class frame_decoder : public wno::block<tagged_vector<64>, std::vector<unsigned char> >
+    class basic_nc_frame_decoder : public wno::block<tagged_vector<64>, std::vector<unsigned char> >
     {
     public:
 
-        frame_decoder(); //!< Constructor for frame_decoder block.
+        basic_nc_frame_decoder(uint64_t sc_map); //!< Constructor for basic_nc_frame_decoder block.
 
         virtual void work(); //!< Signal processing happens here.
         uint64_t m_sc_map;
@@ -94,5 +94,5 @@ namespace wno
     };
 
 }
-#endif // FRAME_DECODER_H
+#endif // BASIC_NC_FRAME_DECODER_H
 

@@ -15,7 +15,9 @@ namespace wno
 {
     underlay::underlay()
     {
+        polarity = 1;
     }
+    //XXX: overlay_data is assumed to be same as frame size (= pnSize)
     std::vector<std::complex<double> > underlay::add_underlay(std::vector<std::complex<double> > overlay_data)
     {
         std::vector<double>abs_data(overlay_data.size());// = std::abs(overlay_data);
@@ -32,7 +34,7 @@ namespace wno
 
         // Assuming that average amplitude of overlay_data is ~0.1
         int z = 0;
-        int polarity = 1; // transmit alternate +1 and -1
+        // int polarity = 1; // transmit alternate +1 and -1
         double noise;
         std::default_random_engine generator;
         std::normal_distribution<double> distribution(0.0,NO_AMP);
@@ -63,7 +65,7 @@ namespace wno
         std::cout << "Avg power of the output is " << avg_power << std::endl;
         return output;
     }
-    
+
     std::vector<std::complex<double> > underlay::decode_underlay(std::vector<std::complex<double> > rx_overlay_data)
     {
         std::vector<std::complex<double> > output = rx_overlay_data;
