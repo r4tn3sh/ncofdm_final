@@ -38,6 +38,7 @@ list(APPEND headers
     ppdu.h
     puncturer.h
     receiver_chain.h
+    nc_receiver_chain.h
     symbol_mapper.h
     subcarrier_mapper.h
     timing_sync.h
@@ -70,6 +71,7 @@ list(APPEND sources
     ppdu.cpp
     puncturer.cpp
     receiver_chain.cpp
+    nc_receiver_chain.cpp
     symbol_mapper.cpp
     subcarrier_mapper.cpp
     timing_sync.cpp

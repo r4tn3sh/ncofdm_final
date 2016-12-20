@@ -7,6 +7,7 @@
  */
 
 #include <cstring>
+#include <iostream>
 #include <assert.h>
 
 #include "subcarrier_mapper.h"
@@ -81,6 +82,7 @@ namespace wno
         unsigned int temp_sc_count;
         temp_sc_count = sc_map - ((sc_map >> 1) & 033333333333) - ((sc_map >> 2) & 011111111111);
         m_total_subcarrier_count = ((temp_sc_count + (temp_sc_count >> 3)) & 030707070707) % 63;
+	std::cout << "Total subcarriers : " << m_total_subcarrier_count << std::endl;
 
 
         // map where the data and pilot go

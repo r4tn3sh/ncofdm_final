@@ -42,6 +42,7 @@ namespace wno
          * \brief Constructor for nc_receiver_chain
          */
         nc_receiver_chain(uint64_t sc_map);
+        // nc_receiver_chain();
 
         /*!
          * \brief Processes the raw time domain samples.

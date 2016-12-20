@@ -24,7 +24,9 @@ namespace wno
      *  Adds each block to the receiver chain.
      */
     nc_receiver_chain::nc_receiver_chain(uint64_t sc_map)
+    // nc_receiver_chain::nc_receiver_chain()
     {
+        // m_sc_map = 17592186040320;
         m_sc_map = sc_map;
         m_ul_tagged_decoder = new underlay_tagged_decode();
         m_fft_symbols = new fft_symbols();

@@ -46,10 +46,11 @@ void test_nc_sim()
 
     basic_nc_frame_builder * fb = new basic_nc_frame_builder();
     nc_receiver_chain * receiver = new nc_receiver_chain(SC_MAP);
+    // nc_receiver_chain * receiver = new nc_receiver_chain();
 
     // Generate the data
     std::string data("This is a test string. Beware! it might not reach destination............");
-    int repeat = 47;
+    int repeat = 3;
 
     // copy the data in payload
     std::vector<unsigned char> payload(data.length()*repeat); //Payload = 1500 bytes
