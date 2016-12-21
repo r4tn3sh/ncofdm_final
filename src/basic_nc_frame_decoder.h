@@ -86,6 +86,7 @@ namespace wno
         virtual void work(); //!< Signal processing happens here.
         uint64_t m_sc_map;
         int m_total_subcarrier_count;
+        int m_data_subcarrier_count;
 
     private:
 

@@ -61,6 +61,8 @@ namespace wno
 
         static const std::complex<double> PILOTS[4]; //!< The 4 Pilot symbols
 
+        uint64_t m_sc_map;
+
         int m_total_subcarrier_count; //!< Number of total subcarriers.
 
         int m_data_subcarrier_count; //!< Number of data subcarriers.

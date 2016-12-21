@@ -49,8 +49,8 @@ void test_nc_sim()
     // nc_receiver_chain * receiver = new nc_receiver_chain();
 
     // Generate the data
-    std::string data("This is a test string. Beware! it might not reach destination............");
-    int repeat = 3;
+    std::string data("This is a test string. This is a test string. This is a test string. Beware! it might not reach destination............");
+    int repeat = 1;
 
     // copy the data in payload
     std::vector<unsigned char> payload(data.length()*repeat); //Payload = 1500 bytes

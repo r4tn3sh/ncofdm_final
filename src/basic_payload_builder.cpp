@@ -78,6 +78,7 @@ namespace wno
         //         double((8 * (payload.size() + 4 /* CRC */) + 6 /* tail */)) /
         //         double(rate_params.dbps));
 
+        std::cout << "Payload encode : rate = "<< m_rate << ", length = "<<m_length<<std::endl;
         // Calculate the number of data bits/bytes (including padding bits)
         int num_data_bits = num_symbols * rate_params.dbps;
         int num_data_bytes = num_data_bits / 8;
@@ -120,6 +121,7 @@ namespace wno
 
     bool basic_payload_builder::decode_data(std::vector<std::complex<double> > samples)
     {
+        std::cout << "Payload decode : rate = "<< m_rate << ", length = "<<m_length<<std::endl;
         // Get the RateParams
         RateParams rate_params = RateParams(m_rate);
 

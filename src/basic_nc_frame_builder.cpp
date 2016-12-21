@@ -17,6 +17,8 @@
 #include <iostream>
 #include <fstream>
 #include <stddef.h>
+#include <cmath>
+#include <numeric>
 
 #include "basic_nc_frame_builder.h"
 #include "interleaver.h"
@@ -56,6 +58,7 @@ namespace wno
      */
     std::vector<std::complex<double> > basic_nc_frame_builder::build_frame(std::vector<unsigned char> payload, Rate rate, uint64_t sc_map)
     {
+        std::cout << "----* Frame building started *----" << std::endl;
         //code & modulate
         basic_payload_builder basic_payload(payload, rate);        
         std::vector<std::complex<double> > samples = basic_payload.encode();
@@ -66,8 +69,23 @@ namespace wno
         std::vector<std::complex<double> > mapped = mapper.map(samples);
         std::cout << "Map subcarrier :" << samples.size() << " --> " << mapped.size() << std::endl;
 
+        // // ----------- Power --------------
+        // std::vector<std::complex<double> > overlay_data = mapped;
+        // std::vector<double>abs_data(overlay_data.size());// = std::abs(overlay_data);
+        // std::cout << "Buffer of size "<< overlay_data.size() << std::endl;
+
+        // for(int x = 0; x < overlay_data.size(); x++)
+        // {
+        //     abs_data[x] = pow(std::abs(overlay_data[x]),2);
+        // }
+        // double sum = std::accumulate(abs_data.begin(), abs_data.end(), 0.0);
+        // double avg_power = sum/overlay_data.size();
+        // std::cout << "Avg power of the data is " << avg_power << std::endl;
+        // // --------------------------------
+
         // Perform the IFFT
         m_ifft.inverse(mapped);
+        std::cout << "IFFT done : " << mapped.size() << std::endl;
 
         // Add the cyclic prefixes
         std::vector<std::complex<double> > prefixed(mapped.size() * 80 / 64);
@@ -78,7 +96,7 @@ namespace wno
         }
         std::cout << "Add CP :" << mapped.size() << " --> " << prefixed.size() << std::endl;
 
-        //XXX: We are not adding proamble here, relying on UL for timing
+        // XXX: We are not adding proamble here, relying on UL for timing
 
         std::vector<std::complex<double> > frame(prefixed.size());
         memcpy(&frame[0], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
@@ -108,6 +126,7 @@ namespace wno
         underlay ul = underlay();
         std::vector<std::complex<double> > combined = ul.add_underlay(paddedframe);
         
+        std::cout << "----* Frame building completed *----" << std::endl;
         // Return the samples
         return combined;
         // ---------------------------------------------

@@ -71,38 +71,27 @@ namespace wno
     //     m_pilot_count(4)
     subcarrier_mapper::subcarrier_mapper(uint64_t sc_map)
     {
-        // std::stringstream str;
-
-        // // Get the hex representation of allocation vector
-        // str << mapping;
-        // int sc_map;
-        // str >> std::hex >> sc_map;
-
-        // count number of bits in the allocation vector
-        unsigned int temp_sc_count;
-        temp_sc_count = sc_map - ((sc_map >> 1) & 033333333333) - ((sc_map >> 2) & 011111111111);
-        m_total_subcarrier_count = ((temp_sc_count + (temp_sc_count >> 3)) & 030707070707) % 63;
-	std::cout << "Total subcarriers : " << m_total_subcarrier_count << std::endl;
-
-
+        m_sc_map = sc_map;
+        m_total_subcarrier_count = 0;
         // map where the data and pilot go
         int loc_count = 0;
         int pilot_count = 0;
-	m_active_map.resize(64);
+        m_active_map.resize(64);
         for(int x=0; x<64; x++)
         {
-            m_active_map[x] = '0'; // null SC
+            m_active_map[x] = 0; // null SC
             if (((sc_map>>x)&0x1) == 1)
             {
-                m_active_map[x] = '1'; // data SC
+                m_active_map[x] = 1; // data SC
                 loc_count++;
                 // TODO: check if you are actually using pilots at all
                 // XXX: Currently assuming every 8th SC used is pilot
                 if(loc_count%8 == 0) // every 8th SC is pilot
                 {
-                    m_active_map[x] = '2'; // pilot SC
+                    m_active_map[x] = 2; // pilot SC
                     pilot_count++;
                 }
+                m_total_subcarrier_count++;
             }
         }
         m_data_subcarrier_count = m_total_subcarrier_count - pilot_count;
@@ -119,9 +108,14 @@ namespace wno
     std::vector<std::complex<double> > subcarrier_mapper::map(std::vector<std::complex<double> > data_samples)
     {
 
+        std::cout << "Mapper : Map = " << m_sc_map <<", Total SCs = " << m_total_subcarrier_count  << ", Data SCs = " << m_data_subcarrier_count << std::endl;
         // XXX: should this check be removed?
-	std::cout << "Total subcarriers : " << m_total_subcarrier_count << std::endl;
-        assert(data_samples.size() % m_data_subcarrier_count == 0);
+        // assert(data_samples.size() % m_data_subcarrier_count == 0);
+        // --------------------------------
+        double pad_length = data_samples.size() % m_data_subcarrier_count;
+        data_samples.resize(data_samples.size()+(m_data_subcarrier_count - pad_length));
+        std::cout << "Mapper : Size after zero padding = " << data_samples.size() << ", Pad = " << m_data_subcarrier_count - pad_length<< std::endl;
+        // --------------------------------
 
         std::complex<double> pilot_value = std::complex<double>(1, 0);
         std::complex<double> null_value = std::complex<double>(0, 0);
@@ -155,6 +149,7 @@ namespace wno
             }
             symbol_count++;
         }
+        std::cout << "Mapper : Sample copied = " << in_index << ", " << samples.size() << std::endl;
 
         return samples;
     }
@@ -170,6 +165,8 @@ namespace wno
     {
         assert(samples.size() % m_active_map.size() == 0);
 
+        // std::cout << "Demapper : Map = " << m_sc_map <<", Total SCs = " << m_total_subcarrier_count  << ", Data SCs = " << m_data_subcarrier_count << std::endl;
+        // std::cout << "Demapper : Sample size = " << samples.size() << std::endl;
         std::vector<std::complex<double> > data_samples(samples.size() * m_data_subcarrier_count / m_active_map.size());
         int out_index = 0;
         for(int x = 0; x < samples.size(); x++)

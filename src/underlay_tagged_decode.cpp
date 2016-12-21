@@ -58,6 +58,9 @@ namespace wno
         int conf = prev_conf;
         for(int x = 0; x < input_buffer.size(); x++)
         {
+            // Pass through the sample
+            output_buffer[x].sample = input_buffer[x];
+
             output_buffer[x].tag = NONE;
             std::vector<std::complex<double> >::const_iterator first = input.begin() + x;
             std::vector<std::complex<double> >::const_iterator last = input.begin() + x + pnSize-1;
@@ -73,7 +76,6 @@ namespace wno
             {
                 continue;
             }
-            // myfile << std::fixed << std::setprecision(8) << corr_coeff << std::endl;
             if(corr_coeff>COEFFTHRESH || corr_coeff<0-COEFFTHRESH)
             {
                 output_buffer[x].tag = ULPN;
@@ -105,22 +107,8 @@ namespace wno
                 std::cout <<  x << " " << corr_coeff << " " << bits_in_error  << " " << next_x<< " " << prev_bit << std::endl;
             }
 
-            // if (correlate(newVec))
-            // {
-            //     // std::cout << "PN seq found at " << x << std::endl;
-            //     // output_buffer[x].tag = ULPN;
-            // }
-            // else
-            // {
-            //     //
-            // }
         }
         prev_conf = conf;
-        // myfile.close();
-        memcpy(&output_buffer[0],
-                &input[0],
-                input_buffer.size() * sizeof(std::complex<double>));
-                //input_buffer.size() * sizeof(tagged_sample));
         memcpy(&m_carryover[0],
                 &input[input_buffer.size()],
                 CARRYOVER_LENGTH * sizeof(std::complex<double>));

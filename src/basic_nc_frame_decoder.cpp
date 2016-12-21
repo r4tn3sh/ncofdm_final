@@ -37,10 +37,25 @@ namespace wno
     {
         m_current_frame.Reset(RateParams(RATE_1_2_BPSK), 0, 0);
         m_sc_map = sc_map;
-        // count number of bits in the allocation vector
-        unsigned int temp_sc_count;
-        temp_sc_count = m_sc_map - ((m_sc_map >> 1) & 033333333333) - ((m_sc_map >> 2) & 011111111111);
-        m_total_subcarrier_count = ((temp_sc_count + (temp_sc_count >> 3)) & 030707070707) % 63;
+        // map where the data and pilot go
+        int loc_count = 0;
+        int pilot_count = 0;
+        m_total_subcarrier_count = 0;
+        for(int x=0; x<64; x++)
+        {
+            if (((sc_map>>x)&0x1) == 1)
+            {
+                loc_count++;
+                // TODO: check if you are actually using pilots at all
+                // XXX: Currently assuming every 8th SC used is pilot
+                if(loc_count%8 == 0) // every 8th SC is pilot
+                {
+                    pilot_count++;
+                }
+                m_total_subcarrier_count++;
+            }
+        }
+        m_data_subcarrier_count = m_total_subcarrier_count - pilot_count;
     }
 
     /*!
@@ -56,8 +71,8 @@ namespace wno
         if(input_buffer.size() == 0) return;
         output_buffer.resize(0);
 
-        std::vector<std::complex<double> > demapped;
-        std::vector<std::complex<double> > temp_frame;
+        std::vector<std::complex<double> > demapped(m_data_subcarrier_count);
+        std::vector<std::complex<double> > temp_frame(64);
         // Step through each m_total_subcarrier_count sample symbol
         for(int x = 0; x < input_buffer.size(); x++)
         {
@@ -67,18 +82,23 @@ namespace wno
                 // XXX: CP has already been removed at this point
                 // Now samples should be demaped based on subcarrier allocation
                 
+                // std::cout << "Decoder : Demapping begins " << input_buffer.size() << " "<< x << std::endl;
+                // std::cout << "Decoder : Total SCs = " << m_total_subcarrier_count << " " << m_sc_map << std::endl;
+                
                 // Demap the subcarriers and remove pilots, 64 samples at a time?
                 subcarrier_mapper mapper = subcarrier_mapper(m_sc_map);
                 memcpy(&temp_frame[0], &input_buffer[x].samples[0], 64 * sizeof(std::complex<double>));
-                demapped = mapper.demap(temp_frame); // size of demapped should be m_total_subcarrier_count
+                demapped = mapper.demap(temp_frame); // size of demapped should be m_data_subcarrier_count
+                // std::cout << "Decoder : Demapping ends " << demapped.size() << " "<< x << std::endl;
 
-                memcpy(&m_current_frame.samples[m_current_frame.samples_copied], &demapped[0], m_total_subcarrier_count * sizeof(std::complex<double>));
-                m_current_frame.samples_copied += m_total_subcarrier_count;
+                memcpy(&m_current_frame.samples[m_current_frame.samples_copied], &demapped[0], m_data_subcarrier_count * sizeof(std::complex<double>));
+                m_current_frame.samples_copied += m_data_subcarrier_count;
             }
 
             // Decode the frame if possible
             if(m_current_frame.samples_copied >= m_current_frame.sample_count && m_current_frame.sample_count != 0)
             {
+                // std::cout << "Decoder : Decoding begins " << m_current_frame.samples_copied<< std::endl;
                 basic_payload_builder frame = basic_payload_builder(m_current_frame.rate_params.rate, m_current_frame.length);
                 if(frame.decode_data(m_current_frame.samples))
                 {
@@ -94,14 +114,15 @@ namespace wno
                 basic_payload_builder h = basic_payload_builder();
 
                 // Calculate the frame sample count
-                int length = pnSize; // XXX: assume frame length to be same as pnSize
+                int length = 119; // XXX: assume frame length to be same as pnSize
                 RateParams rate_params = RATE_1_2_BPSK;
                 // frame_sample_count is actual number of useful samples in the frame
-                int frame_sample_count = 672;//h.get_num_symbols() * m_total_subcarrier_count;
+                int frame_sample_count = 504;//h.get_num_symbols() * m_total_subcarrier_count;
 
                 // Start a new frame
                 m_current_frame.Reset(rate_params, frame_sample_count, length);
                 m_current_frame.samples.resize(frame_sample_count);
+                std::cout << "Decoder : Frame detected -|-|-|-|"<< std::endl;
                 continue;
             }
         }
