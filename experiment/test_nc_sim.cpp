@@ -26,7 +26,9 @@ Rate phy_rate = RATE_1_2_BPSK;
 //Rate phy_rate = RATE_1_2_QAM16;
 //Rate phy_rate = RATE_2_3_QAM64;
 //Rate phy_rate = RATE_3_4_QAM16;
-uint64_t SC_MAP = 17592186040320; //00000ffffffff000
+
+//uint64_t SC_MAP = 17592186040320; //00000ffffffff000
+uint64_t SC_MAP = 71777218305396495; //00000ffffffff000
 
 int main(int argc, char * argv[]){
 

@@ -9,8 +9,8 @@
 #define TOTAL_SIZE 240
 // #define UL_AMP 0.0125 // 20dB below when all 64 SCs are used
 // #define NO_AMP 0.004 // actually std dev for -30dB
-#define UL_AMP 0.0 // 0.0154 // 15dB below when all 64 SCs are used
-#define NO_AMP 0.0//22 // 15dB
+#define UL_AMP 0.0154 // 15dB below when all 64 SCs are used
+#define NO_AMP 0.0154//22 // 15dB
 namespace wno
 {
     underlay::underlay()

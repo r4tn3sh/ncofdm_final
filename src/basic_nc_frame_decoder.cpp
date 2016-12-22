@@ -91,8 +91,7 @@ namespace wno
                 // Start a new frame
                 m_current_frame.Reset(rate_params, frame_sample_count, length);
                 m_current_frame.samples.resize(frame_sample_count);
-                std::cout << "Decoder : Frame detected -|-|-|-|"<< std::endl;
-                // continue;
+                // std::cout << "Decoder : Frame detected -|-|-|-|"<< std::endl;
             }
             // Copy over available symbols
             if(m_current_frame.samples_copied < m_current_frame.sample_count)

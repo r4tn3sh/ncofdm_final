@@ -38,7 +38,7 @@ namespace wno
                 double((8 * (m_length + 4 /* CRC */) + 6 /* tail */)) /
                 double(rate_params.dbps));
         payload.reserve(MAX_FRAME_SIZE);
-        std::cout << "Payload construct : rate = "<< m_rate << ", length = "<<m_length<<std::endl;
+        // std::cout << "Payload construct : rate = "<< m_rate << ", length = "<<m_length<<std::endl;
     }
 
 
@@ -131,7 +131,7 @@ namespace wno
 
     bool basic_payload_builder::decode_data(std::vector<std::complex<double> > samples)
     {
-        std::cout << "Payload decode : rate = "<< m_rate << ", length = "<<m_length<<std::endl;
+        // std::cout << "Payload decode : rate = "<< m_rate << ", length = "<<m_length<<std::endl;
         // Get the RateParams
         RateParams rate_params = RateParams(m_rate);
 
@@ -162,7 +162,7 @@ namespace wno
         viterbi v;
         // v.conv_decode(&depunctured[0], &decoded[0], data_bits);
         v.conv_decode(&demodulated[0], &decoded[0], data_bits);
-        std::cout << "Payload : viterbi decoded  "<< demodulated.size() << " --> "<< decoded.size() <<std::endl;
+        // std::cout << "Payload : viterbi decoded  "<< demodulated.size() << " --> "<< decoded.size() <<std::endl;
 
         // Descramble the data
         // std::vector<unsigned char> descrambled(num_data_bytes+1, 0);

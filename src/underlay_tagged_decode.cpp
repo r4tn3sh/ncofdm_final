@@ -76,9 +76,6 @@ namespace wno
             {
                 continue;
             }
-            // TODO: Remove this
-            if (x == 0)
-                output_buffer[x].tag = ULPN;
             if(corr_coeff>COEFFTHRESH || corr_coeff<0-COEFFTHRESH)
             {
                 //XXX: Tag the output *********
@@ -109,7 +106,7 @@ namespace wno
                 else
                     next_x = (x+pnSize-SEARCHWINDOW)%in_size; // go to 50 samples behind expected peak
 
-                std::cout << "UL tagged decode " <<  x << " " << corr_coeff << " " << bits_in_error  << " " << next_x<< " " << prev_bit << std::endl;
+                // std::cout << "UL tagged decode " <<  x << " " << corr_coeff << " " << bits_in_error  << " " << next_x<< " " << prev_bit << std::endl;
             }
 
         }
