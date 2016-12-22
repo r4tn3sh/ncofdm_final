@@ -87,6 +87,15 @@ namespace wno
         m_ifft.inverse(mapped);
         std::cout << "IFFT done : " << mapped.size() << std::endl;
 
+        // TODO: Delete this : Print info
+        for (int x=0; x<mapped.size(); x++)
+        {
+            std::cout<< mapped[x] << " ";
+            if ((x+1)%64 == 0)
+                std::cout << std::endl;
+        }
+        std::cout << std::endl;
+
         // Add the cyclic prefixes
         std::vector<std::complex<double> > prefixed(mapped.size() * 80 / 64);
         for(int x = 0; x < mapped.size() / 64; x++)

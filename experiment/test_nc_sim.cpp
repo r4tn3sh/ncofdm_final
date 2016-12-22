@@ -22,10 +22,10 @@ double sample_rate = 5e6;
 double tx_gain = 30;
 double rx_gain = 30;
 double amp = 0.5;
-//Rate phy_rate = RATE_1_2_BPSK;
+Rate phy_rate = RATE_1_2_BPSK;
 //Rate phy_rate = RATE_1_2_QAM16;
 //Rate phy_rate = RATE_2_3_QAM64;
-Rate phy_rate = RATE_3_4_QAM16;
+//Rate phy_rate = RATE_3_4_QAM16;
 uint64_t SC_MAP = 17592186040320; //00000ffffffff000
 
 int main(int argc, char * argv[]){
@@ -49,7 +49,8 @@ void test_nc_sim()
     // nc_receiver_chain * receiver = new nc_receiver_chain();
 
     // Generate the data
-    std::string data("This is a test string. This is a test string. This is a test string. Beware! it might not reach destination............");
+    // std::string data("This is a test string.Beware! it might not reach destination............");
+    std::string data("This is a test string.......");
     int repeat = 1;
 
     // copy the data in payload
@@ -62,7 +63,7 @@ void test_nc_sim()
     int pad_length = 0;//samples.size()*1000;
 
     // Concatenate num_frames frames together
-    int num_frames = 20;
+    int num_frames = 50;
     std::cout << "Transmitting " << num_frames << " frame, sample size : " << samples.size() << std::endl;
     std::vector<std::complex<double>> samples_con(samples.size() * num_frames + pad_length);
     for(int x = 0; x < num_frames; x++)
@@ -73,13 +74,12 @@ void test_nc_sim()
     //Pad the end with 0's to flush receive chain
     std::vector<std::complex<double> > zeros(pad_length);
     memcpy(&samples_con[num_frames*samples.size()], &zeros[0], zeros.size()*sizeof(std::complex<double>));
-    std::cout << samples_con.size() << std::endl;
 
     boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time();
 
     // Run the samples through the receiver chain
 
-    int chunk_size = 3200;
+    int chunk_size = 1600;
 
     int count = 0;
     for(int x = 0; x < samples_con.size(); x += chunk_size)

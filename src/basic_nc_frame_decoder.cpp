@@ -76,6 +76,24 @@ namespace wno
         // Step through each m_total_subcarrier_count sample symbol
         for(int x = 0; x < input_buffer.size(); x++)
         {
+            // Look for a start of frame
+            if(input_buffer[x].tag == ULPN)
+            {
+
+                basic_payload_builder h = basic_payload_builder();
+
+                // Calculate the frame sample count
+                int length = 28; // XXX 
+                RateParams rate_params = RateParams(RATE_1_2_BPSK);//(RATE_3_4_QAM16);
+                // frame_sample_count is actual number of useful samples in the frame
+                int frame_sample_count = 528;//h.get_num_symbols() * m_total_subcarrier_count;
+
+                // Start a new frame
+                m_current_frame.Reset(rate_params, frame_sample_count, length);
+                m_current_frame.samples.resize(frame_sample_count);
+                std::cout << "Decoder : Frame detected -|-|-|-|"<< std::endl;
+                // continue;
+            }
             // Copy over available symbols
             if(m_current_frame.samples_copied < m_current_frame.sample_count)
             {
@@ -85,6 +103,7 @@ namespace wno
                 // std::cout << "Decoder : Demapping begins " << input_buffer.size() << " "<< x << std::endl;
                 // std::cout << "Decoder : Total SCs = " << m_total_subcarrier_count << " " << m_sc_map << std::endl;
                 
+
                 // Demap the subcarriers and remove pilots, 64 samples at a time?
                 subcarrier_mapper mapper = subcarrier_mapper(m_sc_map);
                 memcpy(&temp_frame[0], &input_buffer[x].samples[0], 64 * sizeof(std::complex<double>));
@@ -98,7 +117,7 @@ namespace wno
             // Decode the frame if possible
             if(m_current_frame.samples_copied >= m_current_frame.sample_count && m_current_frame.sample_count != 0)
             {
-                // std::cout << "Decoder : Decoding begins " << m_current_frame.samples_copied<< std::endl;
+                // std::cout << "Decoder : Decoding begins " << m_current_frame.rate_params.rate<< std::endl;
                 basic_payload_builder frame = basic_payload_builder(m_current_frame.rate_params.rate, m_current_frame.length);
                 if(frame.decode_data(m_current_frame.samples))
                 {
@@ -107,24 +126,24 @@ namespace wno
                 m_current_frame.sample_count = 0;
             }
 
-            // Look for a start of frame
-            if(input_buffer[x].tag == ULPN)
-            {
+            // // Look for a start of frame
+            // if(input_buffer[x].tag == ULPN)
+            // {
 
-                basic_payload_builder h = basic_payload_builder();
+            //     basic_payload_builder h = basic_payload_builder();
 
-                // Calculate the frame sample count
-                int length = 119; // XXX: assume frame length to be same as pnSize
-                RateParams rate_params = RATE_1_2_BPSK;
-                // frame_sample_count is actual number of useful samples in the frame
-                int frame_sample_count = 504;//h.get_num_symbols() * m_total_subcarrier_count;
+            //     // Calculate the frame sample count
+            //     int length = 28; // XXX 
+            //     RateParams rate_params = RateParams(RATE_1_2_BPSK);//(RATE_3_4_QAM16);
+            //     // frame_sample_count is actual number of useful samples in the frame
+            //     int frame_sample_count = 528;//h.get_num_symbols() * m_total_subcarrier_count;
 
-                // Start a new frame
-                m_current_frame.Reset(rate_params, frame_sample_count, length);
-                m_current_frame.samples.resize(frame_sample_count);
-                std::cout << "Decoder : Frame detected -|-|-|-|"<< std::endl;
-                continue;
-            }
+            //     // Start a new frame
+            //     m_current_frame.Reset(rate_params, frame_sample_count, length);
+            //     m_current_frame.samples.resize(frame_sample_count);
+            //     std::cout << "Decoder : Frame detected -|-|-|-|"<< std::endl;
+            //     continue;
+            // }
         }
     }
 }

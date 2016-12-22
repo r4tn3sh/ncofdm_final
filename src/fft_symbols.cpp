@@ -52,13 +52,14 @@ namespace wno
             }
             if(input_buffer[x].tag == ULPN)
             {
+                std::cout << "Boundry found" << std::endl;
                 // Push the current vector to the output buffer if
-                // we've written any data to it
+                // we've written "any" data to it
                 if(m_offset > 15) output_buffer.push_back(m_current_vector);
 
                 // Start a new vector
                 m_current_vector.tag = ULPN;
-                m_offset = 16;
+                m_offset = 0;
             }
 
             if(input_buffer[x].tag == LTS2)
@@ -76,6 +77,13 @@ namespace wno
             m_offset++;
             if(m_offset == 80)
             {
+                // for (int y=0; y<64; y++)
+                // {
+                //     std::cout << m_current_vector.samples[y] << " ";
+                // }
+                // std::cout << std::endl;
+                // std::cout << std::endl;
+
                 output_buffer.push_back(m_current_vector);
                 m_current_vector.tag = NONE;
                 m_offset = 0;
@@ -85,8 +93,21 @@ namespace wno
         // Perform forward FFT
         for(int x = 0; x < output_buffer.size(); x++)
         {
+            // for (int y=0; y<64; y++)
+            // {
+            //     std::cout << output_buffer[x].samples[y] << " ";
+            //     std::cout << "; "; 
+            // }
+            // std::cout << std::endl;
+            // std::cout << std::endl;
             m_ffft.forward(output_buffer[x].samples);
-
+            // for (int y=0; y<64; y++)
+            // {
+            //     std::cout << output_buffer[x].samples[y] << " ";
+            //     std::cout << "; "; 
+            // }
+            // std::cout << std::endl;
+            // std::cout << std::endl;
         }
     }
 }

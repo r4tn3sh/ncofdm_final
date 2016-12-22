@@ -17,8 +17,8 @@
 
 #include "preamble.h"
 #include "underlay.h"
-#define COEFFTHRESH 0.06
-#define UPCOEFFTHRESH 0.1
+#define COEFFTHRESH 0.1
+#define UPCOEFFTHRESH 0.15
 #define SEARCHWINDOW 10
 #define CARRYOVER_LENGTH pnSize
 namespace wno
@@ -60,7 +60,7 @@ namespace wno
         {
             // Pass through the sample
             output_buffer[x].sample = input_buffer[x];
-
+            // Initialize the tag
             output_buffer[x].tag = NONE;
             std::vector<std::complex<double> >::const_iterator first = input.begin() + x;
             std::vector<std::complex<double> >::const_iterator last = input.begin() + x + pnSize-1;
@@ -76,9 +76,14 @@ namespace wno
             {
                 continue;
             }
+            // TODO: Remove this
+            if (x == 0)
+                output_buffer[x].tag = ULPN;
             if(corr_coeff>COEFFTHRESH || corr_coeff<0-COEFFTHRESH)
             {
+                //XXX: Tag the output *********
                 output_buffer[x].tag = ULPN;
+
                 if (corr_coeff>0) // bit '1' received
                 {
                     if (prev_bit == 1) bits_in_error++;
@@ -104,7 +109,7 @@ namespace wno
                 else
                     next_x = (x+pnSize-SEARCHWINDOW)%in_size; // go to 50 samples behind expected peak
 
-                std::cout <<  x << " " << corr_coeff << " " << bits_in_error  << " " << next_x<< " " << prev_bit << std::endl;
+                std::cout << "UL tagged decode " <<  x << " " << corr_coeff << " " << bits_in_error  << " " << next_x<< " " << prev_bit << std::endl;
             }
 
         }
