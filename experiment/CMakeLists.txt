@@ -20,6 +20,10 @@ list(APPEND test_nc_sim_srcs
         test_nc_sim.cpp
 )
 
+list(APPEND test_nc_tx_srcs
+	test_nc_tx.cpp
+)
+
 list(APPEND test_tx_srcs
 	test_tx.cpp
 )
@@ -34,6 +38,7 @@ list(APPEND test_rx_srcs
 add_executable(sim ${test_sim_srcs})
 add_executable(nc_sim ${test_nc_sim_srcs})
 add_executable(test_tx ${test_tx_srcs})
+add_executable(test_nc_tx ${test_nc_tx_srcs})
 add_executable(test_rx ${test_rx_srcs})
 #
 #
@@ -43,5 +48,6 @@ add_executable(test_rx ${test_rx_srcs})
 target_link_libraries(sim wno_ofdm)
 target_link_libraries(nc_sim wno_ofdm)
 target_link_libraries(test_tx wno_ofdm)
+target_link_libraries(test_nc_tx wno_ofdm)
 target_link_libraries(test_rx wno_ofdm)
 

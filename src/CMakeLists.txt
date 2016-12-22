@@ -45,6 +45,7 @@ list(APPEND headers
     usrp.h
     viterbi.h
 
+    nc_transmitter.h
     transmitter.h
     receiver.h
     underlay.h
@@ -78,6 +79,7 @@ list(APPEND sources
     usrp.cpp
     viterbi.cpp
 
+    nc_transmitter.cpp
     transmitter.cpp
     receiver.cpp
     underlay.cpp
