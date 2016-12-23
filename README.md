@@ -16,3 +16,5 @@ Once you run the *make*, there should be a *bin* subfolder within *ncofdm_final*
 Runs a simulation where the transmitter sends NC-OFDM symbols over a given set of subcarriers. An underlay channel has been added to help with timing, which helps in identfying the start of the frame.
 #### ./test_nc_tx
 Basic NC-OFDM transmitter. Currently has not been tested completely. 
+#### ./test_nc_rx
+Basic NC-OFDM receiver. Currently has not been tested completely. 

@@ -42,8 +42,9 @@ namespace wno
          * \brief Constructor for nc_receiver_chain
          */
         nc_receiver_chain(uint64_t sc_map);
-        // nc_receiver_chain();
+        nc_receiver_chain();
 
+        void set_sc_map(uint64_t sc_map);
         /*!
          * \brief Processes the raw time domain samples.
          * \param samples A vector of received time-domain samples from the usrp block to pass to

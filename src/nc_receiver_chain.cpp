@@ -23,10 +23,34 @@ namespace wno
      *
      *  Adds each block to the receiver chain.
      */
-    nc_receiver_chain::nc_receiver_chain(uint64_t sc_map)
-    // nc_receiver_chain::nc_receiver_chain()
+    nc_receiver_chain::nc_receiver_chain()
     {
-        // m_sc_map = 17592186040320;
+        m_sc_map = 17592186040320;
+        m_ul_tagged_decoder = new underlay_tagged_decode();
+        m_fft_symbols = new fft_symbols();
+        m_nc_frame_decoder = new basic_nc_frame_decoder(m_sc_map);
+
+        // We use semaphore references, so we don't
+        // want them to move to a different memory location
+        // if the vectors get resized
+        m_wake_sems.reserve(100);
+        m_done_sems.reserve(100);
+
+        // Add the blocks to the receiver chain
+        add_block(m_ul_tagged_decoder);
+        add_block(m_fft_symbols);
+        add_block(m_nc_frame_decoder);
+    }
+    /*!
+     * -Initializes each receiver chain block:
+     *  + underlay_tagged_decoder
+     *  + fft_symbols
+     *  + basic_nc_frame_decode
+     *
+     *  Adds each block to the receiver chain.
+     */
+    nc_receiver_chain::nc_receiver_chain(uint64_t sc_map)
+    {
         m_sc_map = sc_map;
         m_ul_tagged_decoder = new underlay_tagged_decode();
         m_fft_symbols = new fft_symbols();
@@ -88,6 +112,13 @@ namespace wno
         }
     }
 
+    /*!
+     * set the value of sc_map
+     */
+    void nc_receiver_chain::set_sc_map(uint64_t sc_map)
+    {
+        m_sc_map = sc_map;
+    }
     /*!
      * This function is the main scheduler for the receive chain. It takes in raw complex samples
      * from the usrp block and passes them first into the Frame Detector block's input buffer.

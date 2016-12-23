@@ -47,6 +47,7 @@ list(APPEND headers
 
     nc_transmitter.h
     transmitter.h
+    nc_receiver.h
     receiver.h
     underlay.h
     underlay_decode.h
@@ -81,6 +82,7 @@ list(APPEND sources
 
     nc_transmitter.cpp
     transmitter.cpp
+    nc_receiver.cpp
     receiver.cpp
     underlay.cpp
     underlay_decode.cpp
