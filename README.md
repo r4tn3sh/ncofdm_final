@@ -1,5 +1,7 @@
 # ncofdm_final
 Implementation of NC-OFDM using C++ API of UHD.
+### Download
+git clone https://github.com/r4tn3sh/ncofdm_final.git -b underlay
 ### Installation
 cd ncofdm_final
 
