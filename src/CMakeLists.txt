@@ -52,6 +52,7 @@ list(APPEND headers
     underlay.h
     underlay_decode.h
     underlay_tagged_decode.h
+    cdma_encode.h
 )
 
 list(APPEND sources 
@@ -87,6 +88,7 @@ list(APPEND sources
     underlay.cpp
     underlay_decode.cpp
     underlay_tagged_decode.cpp
+    cdma_encode.cpp
 )
 
 

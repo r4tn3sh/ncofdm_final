@@ -79,6 +79,7 @@ namespace wno {
 
         usrp m_usrp; //!< The usrp object used to send the generated frames over the air
 
+        //nc_transmitter_chain m_tx_chain; //!< The nc_transmitter chain object used to encode and send the packets
         basic_nc_frame_builder m_nc_frame_builder; //!< The frame builder object used to generate the frames
 
     };
