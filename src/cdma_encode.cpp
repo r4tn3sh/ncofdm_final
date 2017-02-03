@@ -42,9 +42,8 @@ namespace wno
         double corr_coeff = 0.0;
         if(input_buffer.size() == 0) return;
 
-        // TODO : output buffer size is decided by the spreading code length
+        // output buffer size is decided by the spreading code length
         output_buffer.resize(m_pnlength * input_buffer.size());
-
 
         std::vector<std::complex<double> > local_chips(m_pnlength);
         std::vector<std::complex<double> > temp_buffer_0(m_pnlength);
@@ -63,6 +62,7 @@ namespace wno
         for(int x = 0; x < input_buffer.size(); x++)
             temp_buffer_1[x] = local_chips[x]*std::complex<double>(-1,0);
         
+        // TODO : tag the end and beginning of chip
         // Step through the samples
         // std::cout << "Input buffer size : " << input_buffer.size() << std::endl;
         int in_size = input_buffer.size();

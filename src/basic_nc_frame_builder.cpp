@@ -88,6 +88,7 @@ namespace wno
         std::cout << "IFFT done : " << mapped.size() << std::endl;
 
         // Add the cyclic prefixes
+        // TODO : Tag the buffer with CP location (to identify the frame start)
         std::vector<std::complex<double> > prefixed(mapped.size() * 80 / 64);
         for(int x = 0; x < mapped.size() / 64; x++)
         {
@@ -96,12 +97,12 @@ namespace wno
         }
         std::cout << "Add CP :" << mapped.size() << " --> " << prefixed.size() << std::endl;
 
-        // XXX: We are not adding proamble here, relying on UL for timing
+        // XXX: We are not adding preamble here, relying on UL for timing
 
         std::vector<std::complex<double> > frame(prefixed.size());
         memcpy(&frame[0], &prefixed[0], prefixed.size() * sizeof(std::complex<double>));
 
-        // XXX: Be careful with following
+        // FIXME: Be careful with following, DELETE the padding
         // Make the payload size to a multiple of PN-sequence size. (for convenience)
         int pad_length = pnSize - frame.size()%pnSize;
         
@@ -122,7 +123,9 @@ namespace wno
             outfile.write((const char*)&paddedframe.front(), paddedframe.size()*sizeof(std::complex<double>));
 
         outfile.close();
-        // XXX:Adding underlay
+
+        // TODO : This should be moved out of this function
+        // XXX : Adding underlay
         underlay ul = underlay();
         std::vector<std::complex<double> > combined = ul.add_underlay(paddedframe);
         

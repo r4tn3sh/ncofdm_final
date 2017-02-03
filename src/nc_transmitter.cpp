@@ -27,6 +27,9 @@ namespace wno {
     {
     }
 
+    // TODO: Similar to the receiver there should be a tranmitter chain loop 
+    // This loop will continuously check for presence of data in input buffer
+    // Ideally we need two buffer 1. Data channel 2. Control channel
     /*!
      *  Transmits a single frame, blocking until the frame is sent.
      */
